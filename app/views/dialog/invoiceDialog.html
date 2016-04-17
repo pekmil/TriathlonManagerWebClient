@@ -1,0 +1,37 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="$dismiss()">&times</button>
+		<h4>{{dialogTitle}}</h4>
+	</div>
+	<div class="modal-body">
+		<form role="form" name="invoiceForm" novalidate>
+			<div class="form-group" ng-show="invoiceMode === 'SET'">
+				<label for="invoice">Számla:</label>
+				<span class="pull-right">
+					<span class="glyphicon glyphicon-refresh clickable" ng-click="getInvoices()" title="Frissít">|</span>
+					<span class="glyphicon glyphicon-plus clickable" ng-click="toggleNewInvoice()" title="Új"></span>
+					<span ng-show="selected.invoice && selected.invoice.id">|<span class="glyphicon glyphicon-trash clickable" ng-click="unsetInvoice(); $close()" title="Törlés"></span></span>
+				</span>
+				<select name="invoice" ng-model="selected.invoice" ng-options="(i.customername) for i in invoices track by i.id" class="form-control">
+			      <option value="">--Válassz számlát--</option>
+			    </select>
+			</div>
+			<div ng-show="enterNewInvoice || invoiceMode !== 'SET'">
+				<div class="form-group" ng-class="{ 'has-error' : invoiceForm.customername.$invalid && !invoiceForm.customername.$pristine }">
+					<label for="customername">Számlázási név:</label>
+					<input type="text" name="customername" ng-model="selected.invoice.customername" maxlength=150 required ng-disabled="invoiceMode === 'DELETE'" class="form-control" />
+					<p ng-show="invoiceForm.customername.$invalid && !invoiceForm.customername.$pristine" class="help-block">A számlázási név megadása kötelező!</p>
+				</div>
+				<div class="form-group" ng-class="{ 'has-error' : invoiceForm.customeraddress.$invalid && !invoiceForm.customeraddress.$pristine }">
+					<label for="customeraddress">Számlázási cím:</label>
+					<input type="text" name="customeraddress" ng-model="selected.invoice.customeraddress" maxlength=250 required ng-disabled="invoiceMode === 'DELETE'" class="form-control" />
+					<p ng-show="invoiceForm.customeraddress.$invalid && !invoiceForm.customeraddress.$pristine" class="help-block">A számlázási cím megadása kötelező!</p>
+				</div>
+			</div>			
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="$close()" ng-bind="dialogBtnLabel" ng-disabled="invoiceForm.$invalid"></button>
+		<button class="btn btn-primary" ng-click="$dismiss()">Mégse</button>
+	</div>
+</div>

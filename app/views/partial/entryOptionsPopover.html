@@ -1,0 +1,11 @@
+<div>Műveletek: 
+	<span class="glyphicon glyphicon-pencil clickable" ng-click="edit(e)" title="Módosít"></span>
+	<span class="glyphicon glyphicon-trash clickable" ng-click="delete(e)" title="Töröl">|</span>
+	<span class="glyphicon glyphicon-ok-circle clickable" ng-show="e.status === 'PRE'" ng-click="changeStatus(e, 'CHECKED')" title="Bejelentkezett"></span>
+	<span class="glyphicon glyphicon-remove-circle clickable" ng-show="e.status === 'PRE' || e.status === 'CHECKED'" ng-click="changeStatus(e, 'NOTPRESENT')" title="Nem jött el"></span>
+	<span class="glyphicon glyphicon-ban-circle clickable" ng-show="e.status === 'CHECKED'" ng-click="changeStatus(e, 'DSQ')" title="Kizár"></span>
+	<span class="glyphicon glyphicon-record clickable" ng-show="e.status === 'CHECKED'" ng-click="changeStatus(e, 'DNF')" title="Felad">|</span>
+	<span class="glyphicon glyphicon-usd clickable" ng-hide="e.paid" ng-click="pay(e)" title="Fizetett"></span>
+	<span class="glyphicon glyphicon-list-alt clickable" ng-show="e.paid" ng-click="setInvoice(e)" title="Számla igény"></span>
+	<span class="clickable" ng-click="setFamilyEntry(e)" title="Családi nevezés">|<i class="fa fa-users"></i></span>
+</div>

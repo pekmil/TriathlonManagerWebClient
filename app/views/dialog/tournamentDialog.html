@@ -1,0 +1,24 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="$dismiss()">&times</button>
+		<h4>{{dialogTitle}}</h4>
+	</div>
+	<div class="modal-body">
+		<form role="form" name="tournamentForm" novalidate>
+			<div class="form-group" ng-class="{ 'has-error' : tournamentForm.name.$invalid && !tournamentForm.name.$pristine }">
+				<label for="name">Megnevezés:</label>
+				<input type="text" name="name" ng-model="selected.name" ng-disabled="!editMode" maxlength=200 required class="form-control" />
+				<p ng-show="tournamentForm.name.$invalid && !tournamentForm.name.$pristine" class="help-block">A megnevezés megadása kötelező!</p>
+			</div>
+			<div class="form-group" ng-class="{ 'has-error' : tournamentForm.name.$invalid && !tournamentForm.name.$pristine }">
+				<label for="name">Leírás:</label>
+				<textarea name="desc" ng-model="selected.desc" ng-disabled="!editMode" maxlength=1000 required class="form-control"></textarea>
+				<p ng-show="tournamentForm.desc.$invalid && !tournamentForm.desc.$pristine" class="help-block">Leírás megadása kötelező!</p>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="$close()" ng-bind="dialogBtnLabel" ng-disabled="tournamentForm.$invalid"></button>
+		<button class="btn btn-primary" ng-click="$dismiss()">Mégse</button>
+	</div>
+</div>

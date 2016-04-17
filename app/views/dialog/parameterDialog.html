@@ -1,0 +1,24 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="$dismiss()">&times</button>
+		<h4>{{dialogTitle}}</h4>
+	</div>
+	<div class="modal-body">
+		<form role="form" name="parameterForm" novalidate>
+			<div class="form-group" ng-class="{ 'has-error' : parameterForm.name.$invalid && !parameterForm.name.$pristine }">
+				<label for="name">Megnevezés:</label>
+				<input type="text" name="name" ng-model="selected.name" ng-disabled="!editMode" maxlength=100 required class="form-control" />
+				<p ng-show="parameterForm.name.$invalid && !parameterForm.name.$pristine" class="help-block">A megnevezés megadása kötelező!</p>
+			</div>
+			<div class="form-group" ng-class="{ 'has-error' : parameterForm.startyear.$invalid && !parameterForm.startyear.$pristine }" ng-show="type === 'agegroup'">
+				<label for="name">Kezdő év:</label>
+				<input type="number" name="startyear" ng-model="selected.startyear" ng-disabled="!editMode" min=1900 max=3000 ng-pattern="/^[1-9][0-9]{3}$/" ng-required="type === 'agegroup'" class="form-control" />
+				<p ng-show="parameterForm.startyear.$invalid && !parameterForm.startyear.$pristine" class="help-block">Kezdő év megadása kötelező!</p>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="$close()" ng-bind="dialogBtnLabel" ng-disabled="parameterForm.$invalid"></button>
+		<button class="btn btn-primary" ng-click="$dismiss()">Mégse</button>
+	</div>
+</div>

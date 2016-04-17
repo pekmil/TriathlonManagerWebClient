@@ -1,0 +1,23 @@
+<div class="container">
+	<h3><span ng-show="selectedTournament">Körverseny: {{selectedTournament.name}} - </span>Versenyek</h3>
+	<div class="container"><button class="btn btn-primary" ng-click="create()"><span class="glyphicon glyphicon-plus"></span>Új verseny</button></div>
+    <div class="panel panel-default" ng-repeat="r in races | orderBy : '-startdate'" ng-show="races.length">
+		<div class="panel-heading">
+			<div class="col-md-6"><a href="#/entries/{{r.id}}">{{r.name}}</a> ({{r.startdate | date : 'yyyy-MM-dd'}}
+				<span ng-show="r.enddate"> - {{r.enddate | date : 'yyyy-MM-dd'}}</span>)
+				<span ng-show="r.national"> - <span class="glyphicon glyphicon-globe" title="Országos bajnokság"></span></span>
+			</div>
+			<div class="col-md-6" style="display: none;" showonhover>
+				<span class="pull-right">
+					<span class="glyphicon glyphicon-pencil clickable" ng-click="edit(r)" title="Módosít">|</span>
+					<span class="glyphicon glyphicon-trash clickable"  ng-click="delete(r)" title="Töröl"></span>
+				</span>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+        <div class="panel-body">{{r.desc}}</div>
+    </div>
+    <div class="row" ng-hide="races.length msg-box">
+    	<span>Nincsenek megjelenítendő versenyek!</span>
+    </div>
+</div>

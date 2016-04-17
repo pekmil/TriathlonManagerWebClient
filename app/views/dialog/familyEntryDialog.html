@@ -1,0 +1,24 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="$dismiss()">&times</button>
+		<h4>{{dialogTitle}}</h4>
+	</div>
+	<div class="modal-body">
+		<form role="form" name="familyEntryForm" novalidate>
+			<div class="form-group">
+				<label for="family">Család:</label>
+				<span class="pull-right">
+					<span class="glyphicon glyphicon-refresh clickable" ng-click="getParameters('familyentry', true)" title="Frissít"></span>
+					<span ng-show="selected.familyentry && selected.familyentry.id">|<span class="glyphicon glyphicon-trash clickable" ng-click="unsetFamilyEntry(); $close()" title="Törlés"></span></span>
+				</span>
+				<select name="familyentry" ng-model="selected.familyentry" ng-options="(f.name) for f in parameters['familyentry'] track by f.id" class="form-control">
+			      <option value="">--Válassz családot--</option>
+			    </select>
+			</div>			
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="$close()" ng-bind="dialogBtnLabel" ng-disabled="familyEntryForm.$invalid"></button>
+		<button class="btn btn-primary" ng-click="$dismiss()">Mégse</button>
+	</div>
+</div>

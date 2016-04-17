@@ -1,0 +1,20 @@
+<div class="container">
+	<h3>Körversenyek</h3>
+	<div class="container"><button class="btn btn-primary" ng-click="create()"><span class="glyphicon glyphicon-plus"></span>Új körverseny</button></div>
+    <div class="panel panel-default" ng-repeat="t in tournaments" ng-show="tournaments.length">
+		<div class="panel-heading">
+			<div class="col-md-6"><a href="#/races/{{t.id}}">{{t.name}}</a></div>
+			<div class="col-md-6" style="display: none;" showonhover>
+				<span class="pull-right">
+					<span class="glyphicon glyphicon-pencil clickable" ng-click="edit(t)" title="Módosít">|</span>
+					<span class="glyphicon glyphicon-trash clickable"  ng-click="delete(t)" title="Töröl"></span>
+				</span>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+        <div class="panel-body">{{t.desc}}</div>
+    </div>
+    <div class="container msg-box" ng-hide="tournaments.length">
+    	<span>Nincsenek megjelenítendő körversenyek!</span>
+    </div>
+</div>

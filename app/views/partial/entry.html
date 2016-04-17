@@ -1,0 +1,55 @@
+<div class="container">	
+	<h3 ng-show="selectedRace">Nevezések - Verseny: {{selectedRace.name}} ({{selectedRace.startdate | date : 'yyyy-MM-dd'}}) <span class="glyphicon glyphicon-refresh clickable" ng-click="getRaceEntries(selectedRace.id)" title="Frissít"></span></h3>
+	<div class="container hidden-print">
+		<button class="btn btn-primary" ng-click="create()"><span class="glyphicon glyphicon-plus"></span> Új nevezés</button>
+		<a ng-show="selectedRace" href="#/results/{{selectedRace.id}}" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span> Eredmények</a>
+		<a ng-show="selectedRace" href="#/invoices/{{selectedRace.id}}" class="btn btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Számla igények</a>
+		<a ng-show="selectedRace" href="#/familyentries/{{selectedRace.id}}" class="btn btn-primary"><i class="fa fa-users"></i> Családi nevezések</a>
+	</div>
+	<uib-accordion class="hidden-print">
+	    <uib-accordion-group is-open="accordionOptions.open">
+	    	<uib-accordion-heading>
+        		Beolvasás CSV fájlból <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionOptions.open, 'glyphicon-chevron-right': !accordionOptions.open}"></i>
+      		</uib-accordion-heading>
+	      <file-upload url='csvUploadURL' onsuccess="csvUploadSuccess" onerror="csvUploadError" onfilechange="csvValidateContent"></file-upload>
+	      <button type="button" class="btn btn-primary" ng-disabled="!lastUploadedFileName || csvValidationError" ng-click="processCSVEntries()"><span class="glyphicon glyphicon-cloud-upload"></span> Beolvas</button>
+	    </uib-accordion-group>
+	</uib-accordion>			
+	<search-field searchexpr="entrySearchExpr" class="hidden-print"></search-field>
+   	<table class="table table-striped table-bordered table-hover" ng-show="entries.length">
+		<thead>
+			<tr><td colspan=11 class="bg-primary text-center header-level1">Nevezések</td></tr>
+			<tr orderable="entryOrderOptions" class="header-level2 text-center">
+				<td>Név</td>
+				<td>Rajtszám</td>
+				<td>Születési év</td>
+				<td>Település</td>
+				<td>Egyesület</td>
+				<td>Kategória</td>
+				<td>Korcsoport</td>
+				<td>Státusz</td>
+				<td>Licensz</td>
+				<td>Fizetve</td>
+				<td>Rögzítve</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="e in entries | orderBy : entryOrderOptions.orderProperty : entryOrderOptions.orderReverse | filter : getEntrySearchExpr()">
+				<td><span class="clickable" uib-popover-template="popoverOptions.templateUrl" popover-placement="right" popover-trigger="click">{{e.contestant.name}}</span></td>
+				<td>{{e.key.racenum}}</td>
+				<td>{{e.contestant.birthyear}}</td>
+				<td>{{e.contestant.fromtown}}</td>
+				<td>{{e.contestant.club.name}}</td>
+				<td>{{e.category.name}}</td>
+				<td>{{e.agegroup.name}}</td>
+				<td>{{e.status | statusString }}</td>
+				<td>{{e.licencenum}}</td>
+				<td><span class="glyphicon glyphicon-usd" ng-show="e.paid" /><span ng-show="!e.paid && e.remainingpayment">Fizetendő:<br />{{e.remainingpayment | currency : ''}}</span></td>
+				<td>{{e.entrytime | date : 'yyyy-MM-dd HH:mm:ss'}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div ng-hide="entries.length" class="container msg-box">
+    	<span>Nincsenek megjelenítendő nevezések!</span>
+    </div>
+</div>

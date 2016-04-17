@@ -1,0 +1,100 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="$dismiss()">&times</button>
+		<h4>{{dialogTitle}}</h4>
+	</div>
+	<div class="modal-body">
+		 <div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="col-md-6">Versenyző adatok</div>
+				<div class="col-md-6"><span class="glyphicon glyphicon-floppy-disk clickable pull-right" ng-show="mode === 'UPDATE' && contestantForm.$valid" ng-click="$close()" title="Mentés"></span></div>
+				<div class="clearfix"></div>
+			</div>
+	        <div class="panel-body">
+	        	<form role="form" name="contestantForm" novalidate>
+					<div class="form-group col-md-8" ng-class="{ 'has-error' : contestantForm.name.$invalid && !contestantForm.name.$pristine }">
+						<label for="name">Név:</label>
+						<input type="text" name="name" ng-model="selected.contestant.name" ng-disabled="mode === 'DELETE'" maxlength=100 required class="form-control" />
+						<p ng-show="contestantForm.name.$invalid && !contestantForm.name.$pristine" class="help-block">Név megadása kötelező!</p>						
+					</div>
+					<div class="form-group col-md-4" ng-class="{ 'has-error' : contestantForm.club.$invalid && !contestantForm.club.$pristine }">
+						<div>
+							<label for="club">Klub: </label>
+							<span class="glyphicon glyphicon-plus clickable pull-right" ng-show="mode === 'CREATE'" ng-click="toggleNewClub()" title="Új klub"></span>
+							<span class="glyphicon glyphicon-refresh clickable pull-right" ng-show="mode === 'UPDATE'" ng-click="getParameters('club', true)" title="Frissít"></span>
+						</div>
+						<input type="text" name="newclub" ng-model="selected.contestant.club.name" ng-disabled="mode === 'DELETE'" ng-show="enterNewClub" maxlength=100 class="form-control" />		
+						<select name="club" ng-model="selected.contestant.club" ng-disabled="mode === 'DELETE'" ng-hide="enterNewClub" ng-options="c.name for c in parameters['club'] track by c.id" class="form-control">
+					      <option value="">--Válassz klubbot--</option>
+					    </select>		
+					</div>
+					<div class="form-group col-md-4" ng-class="{ 'has-error' : contestantForm.birthYear.$invalid && !contestantForm.birthYear.$pristine }">
+						<label for="birthYear">Születési év:</label>
+						<input type"number" name="birthYear" ng-model="selected.contestant.birthyear" ng-disabled="mode === 'DELETE'" min=1900 max=3000 ng-pattern="/^[1-9][0-9]{3}$/" required ng-change="setAgegroup()" class="form-control" />
+						<p ng-show="contestantForm.birthYear.$invalid && !contestantForm.birthYear.$pristine" class="help-block">Születési év megadása kötelező!</p>
+					</div>
+					<div class="form-group col-md-4" ng-class="{ 'has-error' : contestantForm.gender.$invalid && !contestantForm.gender.$pristine }">
+						<label for="gender">Nem:</label>
+						<select name="gender" ng-model="selected.contestant.gender" ng-disabled="mode === 'DELETE'" required class="form-control">
+						  <option value="">--Válassz nemet--</option>
+					      <option value="MALE">férfi</option>
+					      <option value="FEMALE">nő</option>
+					    </select>
+					    <p ng-show="contestantForm.gender.$invalid && !contestantForm.gender.$pristine" class="help-block">A nem megadása kötelező!</p>
+					</div>
+					<div class="form-group col-md-4" ng-class="{ 'has-error' : contestantForm.fromTown.$invalid && !contestantForm.fromTown.$pristine }">
+						<label for="fromTown">Település:</label>
+						<input type="text" name="fromTown" ng-model="selected.contestant.fromtown" ng-disabled="mode === 'DELETE'" maxlength=100 class="form-control" />
+						<p ng-show="contestantForm.fromTown.$invalid && !contestantForm.fromTown.$pristine" class="help-block">Településnév túl hosszú!</p>
+					</div>					
+				</form>
+	        </div>
+	    </div>		
+	    <div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="col-md-6">Nevezés adatok</div>
+				<div class="col-md-6"><span class="glyphicon glyphicon-floppy-disk clickable pull-right" ng-show="mode === 'UPDATE' && entryForm.$valid" ng-click="$close()" title="Mentés"></span></div>
+				<div class="clearfix"></div>
+			</div>
+	        <div class="panel-body">
+	        	<form role="form" name="entryForm" novalidate>
+					<div class="form-group col-md-4" ng-class="{ 'has-error' : entryForm.racenum.$invalid && !entryForm.racenum.$pristine }">
+						<label for="racenum">Rajtszám:</label>
+						<input type="number" name="racenum" ng-model="selected.key.racenum" ng-disabled="mode !== 'CREATE'" min=1 max=999 ng-pattern="/^[1-9][0-9]{0,2}$/" racenum required class="form-control" />
+						<p ng-show="entryForm.racenum.$invalid && !entryForm.racenum.$pristine" class="help-block">A rajtszám megadása kötelező!</p>
+						<p ng-show="entryForm.racenum.$pending.racenum" class="help-block">Rajtszám ellenőrzése...<img src="resources/images/ajax-loader-small.gif" /></p>
+    					<p ng-show="entryForm.racenum.$error.racenum" class="help-block">A megadott rajtszám foglalt!</p>
+					</div>
+					<div class="form-group col-md-4" ng-class="{ 'has-error' : entryForm.licencenum.$invalid && !entryForm.licencenum.$pristine }">
+						<label for="licencenum">Licensz szám:</label>
+						<input type="text" name="licencenum" ng-model="selected.licencenum" ng-disabled="mode === 'DELETE'" maxlength=50 licencenum class="form-control" /> 
+						<p ng-show="entryForm.licencenum.$pending.licencenum" class="help-block">Licensz ellenőrzése...<img src="resources/images/ajax-loader-small.gif" /></p>
+    					<p ng-show="entryForm.licencenum.$error.licencenum" class="help-block">A megadott licensz nem érvényes!</p>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="paid">Fizetve:</label>
+						<input type="checkbox" name="paid" ng-model="selected.paid" ng-disabled="mode === 'DELETE' || mode === 'UPDATE'" />
+					</div>
+					<div class="form-group col-md-6" ng-class="{ 'has-error' : entryForm.agegroup.$invalid && !entryForm.agegroup.$pristine }">
+						<label for="agegroup">Korcsoport:</label>
+						<select name="agegroup" ng-model="selected.agegroup" ng-disabled="mode === 'DELETE'" ng-options="a.name for a in parameters['agegroup'] track by a.id" required class="form-control">
+					      <option value="">--Válassz korcsoportot--</option>
+					    </select>
+					    <p ng-show="entryForm.agegroup.$invalid && !entryForm.agegroup.$pristine" class="help-block">A korcsoport megadása kötelező!</p>
+					</div>
+					<div class="form-group col-md-6" ng-class="{ 'has-error' : entryForm.category.$invalid && !entryForm.category.$pristine }">
+						<label for="category">Kategória:</label>
+						<select name="category" ng-model="selected.category" ng-disabled="mode === 'DELETE'" ng-options="c.name for c in parameters['category'] track by c.id" required class="form-control">
+					      <option value="">--Válassz kategóriát--</option>
+					    </select>
+					    <p ng-show="entryForm.category.$invalid && !entryForm.category.$pristine" class="help-block">A kategória megadása kötelező!</p>
+					</div>
+				</form>
+	        </div>
+	    </div>		
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="$close()" ng-bind="dialogBtnLabel" ng-disabled="contestantForm.$invalid || entryForm.$invalid || mode === 'UPDATE'"></button>
+		<button class="btn btn-primary" ng-click="$dismiss()">Mégse</button>
+	</div>
+</div>

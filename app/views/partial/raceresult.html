@@ -1,0 +1,231 @@
+<div class="container">	
+	<h3 ng-show="selectedRace">
+		Eredménylisták - {{selectedRace.name}} ({{selectedRace.startdate | date : 'yyyy-MM-dd'}})
+		<a href="#/results/{{selectedRace.id}}" class="btn btn-default pull-right hidden-print"><span class="glyphicon glyphicon-menu-left" title="Vissza"></span></a>
+	</h3>
+	</h3>
+	<div class="container hidden-print">
+		<form role="form" class="form-inline" name="resultsForm">					
+			<div class="form-group">
+				<label for="category">Kategória:</label>
+				<select name="category" ng-model="results.selectedCategory" ng-options="c.name for c in parameters['category'] track by c.id" class="form-control">
+					<option value="">--Válassz kategóriát--</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="national">Csak licensz:</label>
+				<input type="checkbox" name="national" ng-model="results.national" />
+			</div>
+			<div class="form-group">
+				<label for="absolute"> | Abszolút:</label>
+				<input type="checkbox" name="absolute" ng-model="results.absolute" ng-change="selectResultType('absolute')" />
+			</div>
+			<div class="form-group">
+				<label for="team"> | Csapat:</label>
+				<input type="checkbox" name="team" ng-model="results.team" ng-change="selectResultType('team')" />
+			</div>
+			<div class="form-group">
+				<label for="family"> | Családi:</label>
+				<input type="checkbox" name="family" ng-model="results.family" ng-change="selectResultType('family')" />
+			</div>
+			<div class="form-group">
+				<label for="nationalResults"> | OB eredmények:</label>
+				<input type="checkbox" name="nationalResults" ng-model="results.nationalResults" />
+			</div>
+			<div class="form-group">
+				<button class="btn btn-primary" ng-click="getRaceResults()" ng-disabled="!results.selectedCategory && !results.family"><span class="glyphicon glyphicon-list"></span> Listáz</button>
+			</div>
+		</form>
+	</div>   
+
+	<div ng-show="!results.absolute && !results.team && !results.family" class="container">
+		<div ng-hide="results.raceresults.groupedResults" class="container msg-box">
+	    	<span>Nincsenek megjelenítendő eredmények!</span>
+	    </div>
+	    <div ng-show="results.raceresults.groupedResults" class="container">
+	    	<div class="container">
+	    		<table class="table table-bordered">
+					<thead>
+						<tr><td colspan=5 class="bg-primary text-center header-level1"><b>{{results.selectedCategory.name | uppercase}}</b></td></tr>
+						<tr class="text-center header-level2">
+							<td class="col-md-3"><b>Név</b></td>
+							<td class="col-md-1"><b>Rajtszám</b></td>
+							<td class="col-md-3"><b>Egyesület</b></td>
+							<td class="col-md-2"><b>Licensz</b></td>
+							<td class="col-md-3"><b>Idő</b></td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+	    	<div class="container" ng-repeat="(key, value) in results.raceresults.groupedResults">
+	    		<table class="table table-bordered" ng-show="value.maleResults">
+					<thead>
+						<tr><td colspan=5 class="bg-info text-center header-level3"><b>{{key | uppercase}} - FÉRFI</b></td></tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="r in value.maleResults | filter : filterNationalResults track by $index" ng-class="{ 'medalist' : isMedalist($index, r)}">
+							<td class="col-md-3">{{r.name}}</td>
+							<td class="col-md-1">{{r.racenum}}</td>
+							<td class="col-md-3">{{r.club}}</td>
+							<td class="col-md-2">{{r.licencenum}}</td>
+							<td class="col-md-3">{{r.racetime}}</td>
+						</tr>
+					</tbody>
+	    		</table>
+	    		<table class="table table-bordered" ng-show="value.femaleResults">
+					<thead>
+						<tr><td colspan=5 class="bg-info text-center header-level3"><b>{{key | uppercase}} - NŐ</b></td></tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="r in value.femaleResults | filter : filterNationalResults track by $index" ng-class="{ 'medalist' : isMedalist($index, r)}">
+							<td class="col-md-3">{{r.name}}</td>
+							<td class="col-md-1">{{r.racenum}}</td>
+							<td class="col-md-3">{{r.club}}</td>
+							<td class="col-md-2">{{r.licencenum}}</td>
+							<td class="col-md-3">{{r.racetime}}</td>
+						</tr>
+					</tbody>
+	    		</table>
+	    	</div>
+	    </div>
+	</div>
+
+	<div ng-show="results.absolute" class="container">
+		<div ng-hide="results.raceresults.absoluteResults" class="container msg-box">
+	    	<span>Nincsenek megjelenítendő eredmények!</span>
+	    </div>
+	    <div ng-show="results.raceresults.absoluteResults" class="container">
+	    	<div class="container">
+	    		<table class="table table-bordered">
+					<thead>
+						<tr><td colspan=6 class="bg-primary text-center header-level1"><b>{{results.selectedCategory.name | uppercase}}</b></td></tr>
+						<tr class="text-center header-level2">
+							<td class="col-md-1"><b>#</b></td>
+							<td class="col-md-3"><b>Név</b></td>
+							<td class="col-md-1"><b>Rajtszám</b></td>
+							<td class="col-md-3"><b>Egyesület</b></td>
+							<td class="col-md-1"><b>Licensz</b></td>
+							<td class="col-md-3"><b>Idő</b></td>
+						</tr>
+					</thead>
+				</table>			
+	    		<table class="table table-bordered" ng-show="results.raceresults.absoluteResults.maleResults">
+					<thead>
+						<tr><td colspan=6 class="bg-info text-center header-level3"><b>FÉRFI</b></td></tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="r in results.raceresults.absoluteResults.maleResults | filter : filterNationalResults track by $index" ng-class="{ 'medalist' : isMedalist($index, r)}">
+							<td class="col-md-1">{{$index + 1}}.</td>
+							<td class="col-md-3">{{r.name}}</td>
+							<td class="col-md-1">{{r.racenum}}</td>
+							<td class="col-md-3">{{r.club}}</td>
+							<td class="col-md-1">{{r.licencenum}}</td>
+							<td class="col-md-3">{{r.racetime}}</td>
+						</tr>
+					</tbody>
+	    		</table>
+	    		<table class="table table-bordered" ng-show="results.raceresults.absoluteResults.femaleResults">
+					<thead>
+						<tr><td colspan=6 class="bg-info text-center header-level3"><b>NŐ</b></td></tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="r in results.raceresults.absoluteResults.femaleResults | filter : filterNationalResults track by $index" ng-class="{ 'medalist' : isMedalist($index, r)}">
+							<td class="col-md-1">{{$index + 1}}.</td>
+							<td class="col-md-3">{{r.name}}</td>
+							<td class="col-md-1">{{r.racenum}}</td>
+							<td class="col-md-3">{{r.club}}</td>
+							<td class="col-md-1">{{r.licencenum}}</td>
+							<td class="col-md-3">{{r.racetime}}</td>
+						</tr>
+					</tbody>
+	    		</table>
+    		</div>
+	    </div>
+	</div>
+
+	<div ng-show="results.team" class="container">
+		<div ng-hide="results.raceresults.teamResult" class="container msg-box">
+	    	<span>Nincsenek megjelenítendő eredmények!</span>
+	    </div>
+	    <div ng-show="results.raceresults.teamResult" class="container">
+	    	<div class="container">
+	    		<table class="table table-bordered">
+					<thead>
+						<tr><td colspan=5 class="bg-primary text-center header-level1"><b>{{results.selectedCategory.name + ' - CSAPAT' | uppercase}}</b></td></tr>
+						<tr class="text-center header-level2">
+							<td class="col-md-3"><b>Név</b></td>
+							<td class="col-md-1"><b>Rajtszám</b></td>
+							<td class="col-md-3"><b>Egyesület</b></td>
+							<td class="col-md-2"><b>Licensz</b></td>
+							<td class="col-md-3"><b>Idő</b></td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+	    	<div class="container" ng-repeat="(key, value) in results.raceresults.teamResult">
+	    		<table class="table table-bordered" ng-show="value.maleResults">
+					<thead>
+						<tr><td colspan=5 class="bg-info text-center header-level3"><b>{{key | uppercase}} - FÉRFI</b></td></tr>
+					</thead>
+					<tbody ng-repeat="t in value.maleResults">
+						<tr><td colspan=5 class="text-center header-level4">{{t.clubName}} - {{t.teamTime}}</td></tr>
+						<tr ng-repeat="r in t.teamResults | filter : filterNationalResults">
+							<td class="col-md-3">{{r.name}}</td>
+							<td class="col-md-1">{{r.racenum}}</td>
+							<td class="col-md-3">{{r.club}}</td>
+							<td class="col-md-2">{{r.licencenum}}</td>
+							<td class="col-md-3">{{r.racetime}}</td>
+						</tr>
+					</tbody>
+	    		</table>
+	    		<table class="table table-bordered" ng-show="value.femaleResults">
+					<thead>
+						<tr><td colspan=5 class="bg-info text-center header-level3"><b>{{key | uppercase}} - NŐ</b></td></tr>
+					</thead>
+					<tbody ng-repeat="t in value.femaleResults">
+						<tr><td colspan=5 class="text-center header-level4"><b>{{t.clubName}} - {{t.teamTime}}</b></td></tr>
+						<tr ng-repeat="r in t.teamResults | filter : filterNationalResults">
+							<td class="col-md-3">{{r.name}}</td>
+							<td class="col-md-1">{{r.racenum}}</td>
+							<td class="col-md-3">{{r.club}}</td>
+							<td class="col-md-2">{{r.licencenum}}</td>
+							<td class="col-md-3">{{r.racetime}}</td>
+						</tr>					
+					</tbody>
+	    		</table>
+	    	</div>
+	    </div>
+	</div>
+
+	<div ng-show="results.family" class="container">
+		<div ng-hide="results.raceresults" class="container msg-box">
+	    	<span>Nincsenek megjelenítendő eredmények!</span>
+	    </div>
+	    <div ng-show="results.raceresults" class="container">
+	    	<div class="container">
+	    		<table class="table table-bordered">
+					<thead>
+						<tr><td colspan=5 class="bg-primary text-center header-level1"><b>CSALÁDI EREDMÉNYEK</b></td></tr>
+						<tr class="text-center header-level2">
+							<td class="col-md-6"><b>Név</b></td>
+							<td class="col-md-3"><b>Helyezési pont</b></td>
+							<td class="col-md-3"><b>Bónusz pont</b></td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+	    	<div class="container">
+	    		<table class="table table-bordered">
+					<tbody ng-repeat="f in results.raceresults">
+						<tr><td colspan=3 class="bg-info text-center header-level3">{{f.familyName}} - {{f.familyPoint}} pont</td></tr>
+						<tr ng-repeat="r in f.memberResults">
+							<td class="col-md-6">{{r.name}}</td>
+							<td class="col-md-3">{{r.rankPoint}}</td>
+							<td class="col-md-3">{{r.bonusPoint}}</td>
+						</tr>
+					</tbody>
+	    		</table>
+	    	</div>
+	    </div>
+	</div>
+</div>

@@ -1,0 +1,28 @@
+<div class="container">	
+	<h3>Licensz lista <span class="glyphicon glyphicon-refresh clickable" ng-click="getLicences(0, 100)" title="Frissít"></span></h3>
+	<div class="col-md-6">Keresés névkezdetre: <search-field searchexpr="namePart" searchfunc="findByName" class="hidden-print"></search-field></div>
+	<div class="col-md-6">Keresés licenszkezdetre: <search-field searchexpr="licencePart" searchfunc="findByLicence" class="hidden-print"></search-field></div>
+   	<table class="table table-striped table-bordered table-hover" ng-show="licences.length">
+		<thead>
+			<tr><td colspan=4 class="bg-primary text-center">Licenszek</td></tr>
+			<tr class="header-level2 text-center">
+				<td>Név</td>
+				<td>Licensz</td>
+				<td>Születési év</td>
+				<td>Születési hely</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="l in licences">
+				<td>{{l.name}}</td>
+				<td>{{l.licencenum}}</td>
+				<td>{{l.birthyear}}</td>
+				<td>{{l.birthplace}}</td>
+			</tr>
+		</tbody>			
+	</table>
+	<div class="container"><center ng-show="licenes.length"><uib-pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" items-per-page="pagination.itemsPerPage" ng-change="loadPageData()" max-size="10" force-ellipses="true" class="pagination-sm" rotate="true" boundary-links="true"  previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination></center></div>
+	<div ng-hide="licences.length" class="container msg-box">
+    	<span>Nincsenek megjelenítendő licenszek!</span>
+    </div>
+</div>
