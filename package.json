@@ -1,13 +1,13 @@
 {
-  "name": "angular-seed",
+  "name": "TriathlonManagerWebClient",
   "private": true,
   "version": "0.0.0",
-  "description": "A starter project for AngularJS",
-  "repository": "https://github.com/angular/angular-seed",
+  "description": "Web client for the JavaEE backend TriathlonManager application",
+  "repository": "",
   "license": "MIT",
   "devDependencies": {
     "bower": "^1.3.1",
-    "http-server": "^0.6.1",
+    "http-server": "^0.9.0",
     "jasmine-core": "^2.3.4",
     "karma": "~0.12",
     "karma-chrome-launcher": "^0.1.12",
@@ -21,7 +21,7 @@
     "postinstall": "bower install",
 
     "prestart": "npm install",
-    "start": "http-server -a localhost -p 8000 -c-1",
+    "start": "http-server -a 0.0.0.0 -p 8000 -c-1",
 
     "pretest": "npm install",
     "test": "karma start karma.conf.js",

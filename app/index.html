@@ -2,42 +2,93 @@
 <!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="TriathlonManagerWebClient" class="no-js"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
+  <title>TriathlonManagerWebClient</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="resources/css/font-awesome-4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="app.css">
-  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <link rel="icon" href="favicon.ico" />
 </head>
 <body>
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-  </ul>
 
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
-  <div ng-view></div>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+        </button>
+        <a class="navbar-brand" href="#"><img src="resources/images/icons/triathlon-all.png" alt="Logo" title="Kezdőlap" /></a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="#/tournaments">Körversenyek</a></li>
+          <li><a href="#/races">Versenyek</a></li>
+          <li><a href="#/licences">Licenszek</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" ng-controller="AuthCtrl">
+          <li><a href="#/parameters">Paraméterek</a></li>
+          <li><a href="#/admin">Adminisztráció</a></li>
+          <li><a><span class="glyphicon glyphicon-user clickable" title="{{iconTitle}}" ng-click="auth()"></span></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-  <div>Angular seed app: v<span app-version></span></div>
+  <div id="loaderDiv" loader>
+    <img src="resources/images/ajax-loader.gif" class="ajax-loader"/>
+  </div>
+
+  <div class="container" id="mainContainer">
+	 <div class="row" ng-view></div>
+  </div>
+  
+  <footer class="container-fluid bg-primary hidden-print">
+    <div class="container">
+      <div class="col-md-6">TriathlonManagerApp: v<span app-version></span> - <i class="fa fa-chrome"></i></div>
+      <div class="col-md-6"><span class="pull-right"><a href="mailto:pekmil@freemail.hu?Subject=TriathlonManagerWebClient" target="_top">pekmil</a> &copy; 2016</span></div>
+    </div>
+  </footer>
+
+  <div ng-controller="NotificationCtrl" id="alertsDiv">
+    <div id="alerts" ng-show="alerts.length">
+      <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="5000">{{alert.msg}}</uib-alert>      
+    </div>
+  </div>
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
+  -->  
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>  
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="bower_components/angular-websocket/dist/angular-websocket.min.js"></script>
   <script src="app.js"></script>
-  <script src="view1/view1.js"></script>
-  <script src="view2/view2.js"></script>
-  <script src="components/version/version.js"></script>
-  <script src="components/version/version-directive.js"></script>
-  <script src="components/version/interpolate-filter.js"></script>
-</body>
+  <script src="components/interceptors.js"></script>
+  <script src="components/directives.js"></script>
+  <script src="components/filters.js"></script>
+  <script src="controllers/controllers.js"></script>
+  <script src="controllers/race.js"></script>
+  <script src="controllers/tournament.js"></script>
+  <script src="controllers/entry.js"></script>
+  <script src="controllers/admin.js"></script>
+  <script src="services/services.js"></script>
+  <script src="services/tournamentService.js"></script>
+  <script src="services/raceService.js"></script>
+  <script src="services/entryService.js"></script>
+  <script src="services/adminService.js"></script>
+  </body>
 </html>

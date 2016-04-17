@@ -1,8 +1,8 @@
 {
-  "name": "angular-seed",
-  "description": "A starter project for AngularJS",
+  "name": "TriathlonManagerWebClient",
+  "description": "Web client for the JavaEE backend TriathlonManager application",
   "version": "0.0.0",
-  "homepage": "https://github.com/angular/angular-seed",
+  "homepage": "",
   "license": "MIT",
   "private": true,
   "dependencies": {
@@ -10,6 +10,11 @@
     "angular-route": "~1.4.0",
     "angular-loader": "~1.4.0",
     "angular-mocks": "~1.4.0",
-    "html5-boilerplate": "~5.2.0"
+    "html5-boilerplate": "~5.2.0",
+    "bootstrap": "~3.3.0",
+    "angular-websocket": "~1.0.14"
+  },
+  "resolutions": {
+    "angular": "1.4.9"
   }
 }
