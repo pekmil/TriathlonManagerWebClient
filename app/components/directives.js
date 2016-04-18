@@ -64,16 +64,17 @@ tmwcapp.directive('licencenum', function($q, licenceService) {
     require: 'ngModel',
     link: function(scope, elm, attrs, ctrl) {
       ctrl.$asyncValidators.licencenum = function(modelValue, viewValue) {
-        if (ctrl.$isEmpty(modelValue)) {
+        var inverse = attrs.licencenum;
+        if (ctrl.$isEmpty(viewValue)) {
           return $q.when();
         }
         var def = $q.defer();
         licenceService.licenceExists(viewValue).then(
             function(){
-                def.resolve();
+                if(inverse){def.reject();} else {def.resolve()};
             },
             function(error){
-                def.reject();
+                if(inverse){def.resolve();} else {def.reject();}
             }
         );
         return def.promise;

@@ -230,7 +230,7 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
         else if(type === "team"){$scope.results.absolute = false;$scope.results.family = false;}
     }
     $scope.filterNationalResults = function(result){
-        return !$scope.results.nationalResults || result.licencenum !== null;
+        return !$scope.results.nationalResults || result.licencenum;
     }
 
     $scope.processCSVEntries = function(){

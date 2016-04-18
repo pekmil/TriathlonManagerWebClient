@@ -1,0 +1,36 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="$dismiss()">&times</button>
+		<h4>{{dialogTitle}}</h4>
+	</div>
+	<div class="modal-body">
+    	<form role="form" name="licenceForm" novalidate>
+			<div class="form-group col-md-6" ng-class="{ 'has-error' : licenceForm.name.$invalid && !licenceForm.name.$pristine }">
+				<label for="name">Név:</label>
+				<input type="text" name="name" ng-model="selected.name" ng-disabled="mode === 'DELETE'" maxlength=100 required class="form-control" />
+				<p ng-show="licenceForm.name.$invalid && !licenceForm.name.$pristine" class="help-block">Név megadása kötelező!</p>						
+			</div>
+			<div class="form-group col-md-6" ng-class="{ 'has-error' : licenceForm.licencenum.$invalid && !licenceForm.licencenum.$pristine }">
+				<label for="licencenum">Licensz:</label>
+				<input type="text" name="licencenum" ng-model="selected.licencenum" ng-disabled="mode == 'DELETE'" maxlength=50 licencenum="inverse" required class="form-control" />
+				<p ng-show="licenceForm.licencenum.$invalid && !licenceForm.licencenum.$pristine" class="help-block">A licensz megadása kötelező!</p>
+				<p ng-show="licenceForm.licencenum.$pending.licencenum" class="help-block">Licensz ellenőrzése...<img src="resources/images/ajax-loader-small.gif" /></p>
+				<p ng-show="licenceForm.licencenum.$error.licencenum" class="help-block">A megadott licensz már létezik!</p>
+			</div>
+			<div class="form-group col-md-6" ng-class="{ 'has-error' : licenceForm.birthYear.$invalid && !licenceForm.birthYear.$pristine }">
+				<label for="birthYear">Születési év:</label>
+				<input type"number" name="birthYear" ng-model="selected.birthyear" ng-disabled="mode === 'DELETE'" min=1900 max=3000 ng-pattern="/^[1-9][0-9]{3}$/" required class="form-control" />
+				<p ng-show="licenceForm.birthYear.$invalid && !licenceForm.birthYear.$pristine" class="help-block">Születési év megadása kötelező!</p>
+			</div>			
+			<div class="form-group col-md-6" ng-class="{ 'has-error' : licenceForm.birthPlace.$invalid && !licenceForm.birthPlace.$pristine }">
+				<label for="birthPlace">Születési hely:</label>
+				<input type="text" name="birthPlace" ng-model="selected.birthplace" ng-disabled="mode === 'DELETE'" maxlength=100 required class="form-control" />
+				<p ng-show="licenceForm.birthPlace.$invalid && !licenceForm.birthPlace.$pristine" class="help-block">Településnév túl hosszú!</p>
+			</div>					
+		</form>		   
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="$close()" ng-bind="dialogBtnLabel" ng-disabled="licenceForm.$invalid"></button>
+		<button class="btn btn-primary" ng-click="$dismiss()">Mégse</button>
+	</div>
+</div>
