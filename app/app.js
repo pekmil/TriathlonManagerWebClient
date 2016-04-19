@@ -95,7 +95,7 @@ constant('AppConfig',
       {src : 'resources/images/carousel/triathlon-bicycle.jpg', caption : 'Biciklizés', desc : ''},
       {src : 'resources/images/carousel/triathlon-run.jpg', caption : 'Futás', desc : ''}
     ],
-    serviceBaseURL : 'http://192.168.1.103:8080/TriathlonManager/rest/',
-    notificationWSEndpoint : 'ws://192.168.1.103:8080/TriathlonManager/notification'
+    serviceBaseURL : 'http://192.168.0.25:8080/TriathlonManager/rest/',
+    notificationWSEndpoint : 'ws://192.168.0.25:8080/TriathlonManager/notification'
   }).
 value('version', '0.1');
