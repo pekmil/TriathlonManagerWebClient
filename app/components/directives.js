@@ -65,7 +65,7 @@ tmwcapp.directive('licencenum', function($q, licenceService) {
     link: function(scope, elm, attrs, ctrl) {
       ctrl.$asyncValidators.licencenum = function(modelValue, viewValue) {
         var inverse = attrs.licencenum;
-        if (ctrl.$isEmpty(viewValue)) {
+        if (ctrl.$isEmpty(modelValue) || (scope.mode == 'DELETE' && !inverse)) {
           return $q.when();
         }
         var def = $q.defer();

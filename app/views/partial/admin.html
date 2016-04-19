@@ -44,5 +44,36 @@
 	      	<label>Licenszadatok törlése:</label>
 	      	<button type="button" class="btn btn-primary" ng-click="deleteLicenceData()"><span class="glyphicon glyphicon-trash"></span> Töröl</button>
 	    </uib-accordion-group>
+	     <uib-accordion-group is-open="accordionOptions.modifyResult.open">
+	    	<uib-accordion-heading>
+        		Eredmény módosítása <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionOptions.modifyResult.open, 'glyphicon-chevron-right': !accordionOptions.modifyResult.open}"></i>
+      		</uib-accordion-heading>
+      		<form class="form-inline" role="form">
+  				<div class="form-group">
+      				<label for="race">Verseny:</label>
+					<select name="race" ng-model="selectedRace" ng-options="r.name for r in races track by r.id" ng-change="data.selectedRace = selectedRace;data.result = {}" class="form-control"></select>
+				</div>				
+			</form>
+			<br />
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<form role="form" name="resultForm" class="form-inline" novalidate>
+						<div class="form-group" ng-class="{ 'has-error' : resultForm.racenum.$invalid && !resultForm.racenum.$pristine }">
+							<label for="racenum">Rajtszám:</label>
+							<input type="number" name="racenum" id="result-racenum" ng-model="data.result.racenum" min=1 max=999 ng-pattern="/^[1-9][0-9]{0,2}$/" racenum="inverse" required class="form-control" />
+							<p ng-show="resultForm.racenum.$invalid && !resultForm.racenum.$pristine" class="help-block">A rajtszám megadása kötelező!</p>    
+							<p ng-show="resultForm.racenum.$pending.racenum" class="help-block">Rajtszám ellenőrzése...<img src="resources/images/ajax-loader-small.gif" /></p>
+							<p ng-show="resultForm.racenum.$error.racenum" class="help-block">Nem létező rajtszám!</p>
+						</div>
+						<div class="form-group">				
+							<uib-timepicker ng-model="data.result.racetime" show-seconds="true" show-meridian="false" required></uib-timepicker>
+						</div>
+						<div class="form-group">
+							<button type="button" class="btn btn-primary" ng-disabled="resultForm.$invalid" ng-click="modifyResult()"><span class="glyphicon glyphicon-upload"></span> Módosít</button>
+						</div>
+					</form>	
+				</div>	
+			</div>
+	    </uib-accordion-group>
 	</uib-accordion>
 </div>

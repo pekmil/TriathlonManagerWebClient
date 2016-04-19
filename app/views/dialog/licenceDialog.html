@@ -12,7 +12,7 @@
 			</div>
 			<div class="form-group col-md-6" ng-class="{ 'has-error' : licenceForm.licencenum.$invalid && !licenceForm.licencenum.$pristine }">
 				<label for="licencenum">Licensz:</label>
-				<input type="text" name="licencenum" ng-model="selected.licencenum" ng-disabled="mode == 'DELETE'" maxlength=50 licencenum="inverse" required class="form-control" />
+				<input type="text" name="licencenum" ng-model="selected.licencenum" ng-disabled="mode == 'DELETE'" maxlength=50 required class="form-control" />
 				<p ng-show="licenceForm.licencenum.$invalid && !licenceForm.licencenum.$pristine" class="help-block">A licensz megadása kötelező!</p>
 				<p ng-show="licenceForm.licencenum.$pending.licencenum" class="help-block">Licensz ellenőrzése...<img src="resources/images/ajax-loader-small.gif" /></p>
 				<p ng-show="licenceForm.licencenum.$error.licencenum" class="help-block">A megadott licensz már létezik!</p>
@@ -25,7 +25,7 @@
 			<div class="form-group col-md-6" ng-class="{ 'has-error' : licenceForm.birthPlace.$invalid && !licenceForm.birthPlace.$pristine }">
 				<label for="birthPlace">Születési hely:</label>
 				<input type="text" name="birthPlace" ng-model="selected.birthplace" ng-disabled="mode === 'DELETE'" maxlength=100 required class="form-control" />
-				<p ng-show="licenceForm.birthPlace.$invalid && !licenceForm.birthPlace.$pristine" class="help-block">Településnév túl hosszú!</p>
+				<p ng-show="licenceForm.birthPlace.$invalid && !licenceForm.birthPlace.$pristine" class="help-block">Születési hely megadása kötelező!</p>
 			</div>					
 		</form>		   
 	</div>

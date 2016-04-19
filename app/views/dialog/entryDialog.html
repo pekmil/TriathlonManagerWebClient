@@ -66,7 +66,10 @@
     					<p ng-show="entryForm.racenum.$error.racenum" class="help-block">A megadott rajtszám foglalt!</p>
 					</div>
 					<div class="form-group col-md-4" ng-class="{ 'has-error' : entryForm.licencenum.$invalid && !entryForm.licencenum.$pristine }">
-						<label for="licencenum">Licensz szám:</label>
+						<div>
+							<label for="licencenum">Licensz szám:</label>
+							<span class="glyphicon glyphicon-certificate pull-right" ng-show="entryForm.licencenum.$valid && selected.licencenum" ng-mouseover="loadLicenceData()" uib-popover-template="popoverOptions.licencesTemplateUrl" popover-placement="right" popover-trigger="mouseenter"></span>
+						</div>
 						<input type="text" name="licencenum" ng-model="selected.licencenum" ng-disabled="mode === 'DELETE'" maxlength=50 licencenum class="form-control" /> 
 						<p ng-show="entryForm.licencenum.$pending.licencenum" class="help-block">Licensz ellenőrzése...<img src="resources/images/ajax-loader-small.gif" /></p>
     					<p ng-show="entryForm.licencenum.$error.licencenum" class="help-block">A megadott licensz nem érvényes!</p>

@@ -10,7 +10,8 @@ tmwcapp.service('adminService', ['$http', '$q', 'AppConfig',
         getEntryOptions : getEntryOptions,
         modifyEntries : modifyEntries,
         processCSVLicences : processCSVLicences,
-        deleteLicenceData : deleteLicenceData
+        deleteLicenceData : deleteLicenceData,
+        modifyResult : modifyResult
 	});
 
     function deleteRaceData(raceId) {
@@ -54,6 +55,15 @@ tmwcapp.service('adminService', ['$http', '$q', 'AppConfig',
             url: serviceURL + '/deletelicencedata/'
         });
         return(request.then(handleSuccess, handleError));
+    }
+
+    function modifyResult(raceId, resultData) {
+        var request = $http({
+            method: "POST",
+            url: serviceURL + '/modifyresult/' + raceId,
+            data: resultData
+        });
+        return( request.then( handleSuccess, handleError ) );
     }
 
     function handleError( response ) {

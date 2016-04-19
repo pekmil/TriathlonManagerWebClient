@@ -12,14 +12,15 @@ tmwcapp.service('licenceService', ['$http', '$q', 'AppConfig',
         licenceExists : licenceExists,
         updateLicence : updateLicence,
         createLicence : createLicence,
-        deleteLicence : deleteLicence
+        deleteLicence : deleteLicence,
+        getLicence : getLicence
     });
 
      function updateLicence(licence) {
         var request = $http({
             method: "PUT",
             url: serviceURL + '/' + licence.id,
-            data: invoice
+            data: licence
         });
         return( request.then( handleSuccess, handleError ) );
     }
@@ -47,6 +48,14 @@ tmwcapp.service('licenceService', ['$http', '$q', 'AppConfig',
             url: serviceURL + '/' + from + '/' + to,
         });
         return(request.then(handleSuccess, handleError));
+    }
+
+    function getLicence(licence) {
+        var request = $http({
+            method: "GET",
+            url: serviceURL + '/' + encodeURIComponent(licence)
+        });
+        return( request.then( handleSuccess, handleError ) );
     }
 
     function findByName(namePart) {

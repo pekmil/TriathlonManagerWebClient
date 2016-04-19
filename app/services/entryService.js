@@ -107,7 +107,7 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
     function deleteEntry(entry) {
         var request = $http({
             method: "DELETE",
-            url: serviceURL + '/raceid/' + entry.race.id + '/racenum/' + entry.key.racenum
+            url: serviceURL + '/raceid/' + entry.key.raceId + '/racenum/' + entry.key.racenum
         });
         return( request.then( handleSuccess, handleError ) );
     }

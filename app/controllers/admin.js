@@ -14,6 +14,9 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
         ,
         manageLicenceData : {
             open : false
+        },
+        modifyResult : {
+            open : false
         }
     };
     $scope.data = {};
@@ -201,6 +204,18 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
 
     $scope.modifyEntries = function(){
         modifyEntries();
+    }
+
+    $scope.modifyResult = function(){
+        adminService.modifyResult($scope.data.selectedRace.id, $scope.data.result).then(
+            function(response){
+                notify(response.type, response.msg);
+                $scope.data.result = {};
+            },
+            function(error){
+                notify(error.type, error.msg);
+            }
+        );
     }
 
     function notify(type, msg){

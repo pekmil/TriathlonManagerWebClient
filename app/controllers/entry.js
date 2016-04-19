@@ -1,10 +1,12 @@
 'use strict';
 
-tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filter', '$location', 'entryService', 'raceService', 'parameterService', 'invoiceService', 'AppConfig', '$uibModal',
-  function($scope, $rootScope, $routeParams, $filter, $location, entryService, raceService, parameterService, invoiceService, AppConfig, $uibModal) {
+tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filter', '$location', 
+                                 'entryService', 'raceService', 'parameterService', 'invoiceService', 'licenceService', 'AppConfig', '$uibModal',
+  function($scope, $rootScope, $routeParams, $filter, $location, entryService, raceService, parameterService, invoiceService, licenceService, AppConfig, $uibModal) {
 
     $scope.popoverOptions = {
-        templateUrl: 'views/partial/entryOptionsPopover.html'
+        templateUrl: 'views/partial/entryOptionsPopover.html',
+        licencesTemplateUrl: 'views/partial/licencesPopover.html'
     };
     $scope.accordionOptions = {
         open : false
@@ -287,6 +289,19 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
                 notify('error', error);
             }
         );
+    }
+
+    $scope.loadLicenceData = function(){
+        if($scope.selected.licencenum){
+            licenceService.getLicence($scope.selected.licencenum).then(
+                function(licences){
+                    $scope.licences = licences;
+                },
+                function(error){
+                    notify(error.type, error.msg);
+                }
+            );
+        }
     }
 
     var open = function(){
