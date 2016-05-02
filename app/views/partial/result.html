@@ -28,12 +28,13 @@
 	</div>
    	<table class="table table-striped table-bordered table-hover" ng-show="results.length">
 		<thead>
-			<tr><td colspan=4 class="text-center bg-primary header-level1">Rögzített eredmények</td></tr>
+			<tr><td colspan=5 class="text-center bg-primary header-level1">Rögzített eredmények</td></tr>
 			<tr orderable="resultOrderOptions" class="header-level2">
 				<td>Név</td>
 				<td>Rajtszám</td>
 				<td>Idő</td>
 				<td>Rögzítve</td>
+				<td></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -42,6 +43,7 @@
 				<td>{{r.key.racenum}}</td>
 				<td>{{r.racetime | date : 'HH:mm:ss'}}</td>
 				<td>{{r.finishtime | date : 'yyyy-MM-dd HH:mm:ss'}}</td>
+				<td><span class="glyphicon glyphicon-pencil" title="Módosítások" ng-show="r.racetimemods" uib-popover="{{r.racetimemods}}" popover-trigger="mouseenter"></span></td>
 			</tr>
 		</tbody>
 	</table>
