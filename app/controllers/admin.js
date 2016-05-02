@@ -23,7 +23,7 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
     $scope.csvUploadURL = AppConfig.serviceBaseURL + 'licence/uploadcsv';
     $scope.expectedFileType = 'application/vnd.ms-excel';
     $scope.expectedFileExt = 'csv';
-    $scope.expectedCSVHeader = 'l_id;l_name;l_licencenum;l_bithplace;l_birthyear';
+    $scope.expectedCSVHeader = 'l_id;l_name;l_licencenum;l_birthplace;l_birthyear';
     $scope.expectedDataLinePattern = /\d{1,};.{1,100};.{1,50};.{0,100};\d{4}/;
     $scope.csvValidationError = true;
 

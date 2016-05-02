@@ -126,7 +126,7 @@ footer div.container div.col-md-6 a {
 @media print {
   .header-level1 {
     background-color: #337ab7 !important;
-    color: #fff !important;
+    color: #000 !important;
   }
   .header-level2 {
     background-color: #8DB4E2 !important;
