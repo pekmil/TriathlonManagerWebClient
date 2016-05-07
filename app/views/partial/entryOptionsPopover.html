@@ -2,7 +2,8 @@
 	<span class="glyphicon glyphicon-pencil clickable" ng-click="edit(e)" title="Módosít"></span>
 	<span class="glyphicon glyphicon-trash clickable" ng-click="delete(e)" title="Töröl">|</span>
 	<span class="glyphicon glyphicon-ok-circle clickable" ng-show="e.status === 'PRE'" ng-click="changeStatus(e, 'CHECKED')" title="Bejelentkezett"></span>
-	<span class="glyphicon glyphicon-remove-circle clickable" ng-show="e.status === 'PRE' || e.status === 'CHECKED'" ng-click="changeStatus(e, 'NOTPRESENT')" title="Nem jött el"></span>
+	<span class="glyphicon glyphicon-remove-circle clickable" ng-show="e.status === 'PRE'" ng-click="changeStatus(e, 'NOTPRESENT')" title="Nem jött el"></span>
+	<span class="glyphicon glyphicon-remove-sign clickable" ng-show="e.status === 'CHECKED'" ng-click="changeStatus(e, 'NOTSTARTED')" title="Nem indult"></span>
 	<span class="glyphicon glyphicon-ban-circle clickable" ng-show="e.status === 'CHECKED'" ng-click="changeStatus(e, 'DSQ')" title="Kizár"></span>
 	<span class="glyphicon glyphicon-record clickable" ng-show="e.status === 'CHECKED'" ng-click="changeStatus(e, 'DNF')" title="Felad">|</span>
 	<span class="glyphicon glyphicon-usd clickable" ng-hide="e.paid" ng-click="pay(e)" title="Fizetett"></span>

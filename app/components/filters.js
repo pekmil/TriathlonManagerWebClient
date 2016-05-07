@@ -21,6 +21,9 @@ tmwcapp.filter('statusString', function() {
         case 'PRE':
 	        return "Előnevezett";
 	        break; 
+        case 'NOTSTARTED':
+	        return "Nem indult";
+	        break; 
 	    default:
 	        return "N/A";
 	}

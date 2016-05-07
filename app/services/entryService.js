@@ -61,7 +61,7 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
     function updateEntry(entry) {
         var request = $http({
             method: "PUT",
-            url: serviceURL + '/' + entry.id,
+            url: serviceURL,
             data: entry
         });
         return( request.then( handleSuccess, handleError ) );
