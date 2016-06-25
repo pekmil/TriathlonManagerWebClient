@@ -80,5 +80,41 @@
 				</div>	
 			</div>
 	    </uib-accordion-group>
+	    <uib-accordion-group is-open="accordionOptions.manageResultmods.open">
+	    	<uib-accordion-heading>
+        		Időeredmény módosítások kezelése <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionOptions.manageResultmods.open, 'glyphicon-chevron-right': !accordionOptions.manageResultmods.open}"></i>
+      		</uib-accordion-heading>
+      		<div ng-controller="ResultmodCtrl">
+      			<div>
+      				<span class="glyphicon glyphicon-plus clickable"  ng-click="create()" title="Új"> </span>
+      				<span class="glyphicon glyphicon-refresh clickable"  ng-click="getResultmods()" title="Betölt/Frissít"></span>
+      			</div>
+				<table class="table table-striped table-bordered table-hover" ng-show="resultmods.length">
+					<thead>
+						<tr>
+							<td>Azonosító</td>
+							<td>Megnevezés</td>
+							<td>+/-</td>
+							<td>Idő</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="r in resultmods">
+							<td>{{r.idname}}<span style="display: none;" showonhover>
+												(<span class="glyphicon glyphicon-pencil clickable" ng-click="edit(r)" title="Módosít">|</span>
+										   		<span class="glyphicon glyphicon-trash clickable"  ng-click="delete(r)" title="Töröl"></span>)
+										   	</span>
+						   </td>
+						   <td>{{r.name}}</td>
+						   <td>{{r.plus ? '+' : '-'}}</td>
+						   <td>{{r.time | date : 'HH:mm:ss'}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div ng-hide="resultmods.length" class="container msg-box">
+			    	<span>Nincsenek megjelenítendő időeredmény módosítások!</span>
+			    </div>
+      		</div>
+	    </uib-accordion-group>
 	</uib-accordion>
 </div>

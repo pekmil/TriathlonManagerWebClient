@@ -17,6 +17,7 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
         processCSVEntries : processCSVEntries,
         getFinishedResults : getFinishedResults,
         postResult : postResult,
+        applyResultmod : applyResultmod,
         getRaceResults : getRaceResults,
         getRaceFamilyEntries : getRaceFamilyEntries
 	});
@@ -116,6 +117,15 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
         var request = $http({
             method: "POST",
             url: serviceURL + '/result/' + raceId,
+            data: resultData
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+
+     function applyResultmod(raceId, resultData) {
+        var request = $http({
+            method: "POST",
+            url: serviceURL + '/resultmod/' + raceId,
             data: resultData
         });
         return( request.then( handleSuccess, handleError ) );

@@ -160,8 +160,8 @@ tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService',
   
 }]);
 
-tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entryService', 'raceService', 'focus', '$uibModal',
-  function ($scope, $rootScope, $routeParams, entryService, raceService, focus, $uibModal) {
+tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entryService', 'raceService', 'resultmodService', 'focus', '$uibModal',
+  function ($scope, $rootScope, $routeParams, entryService, raceService, resultmodService, focus, $uibModal) {
 
     $scope.resultOrderOptions = {
         orderProperty : "finishtime",
@@ -173,6 +173,9 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
             {idx : 3, name : "finishtime"}
         ]
     };
+    $scope.popoverOptions = {
+        templateUrl: 'views/partial/racetimemodsPopover.html',
+    }
 
     var rid = $routeParams.raceId;
     if(rid === undefined){
@@ -183,6 +186,13 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
         raceService.getRace(rid).then(function(race){$scope.selectedRace = race;})        
     }
 
+    $scope.result = {
+        racenum : null,
+        racetime : null,
+        resultmodIds : [],
+        rollback : false
+    }
+
     function getResults(raceId){
         focus('result-racenum');
         entryService.getFinishedResults(raceId).then(
@@ -190,10 +200,22 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
                 $scope.results = results;
             },
             function(error){
-                alert(error);
+                notify('error', error);
             }
         );
     }
+
+    function getResultmods(){
+        resultmodService.getResultmods().then(
+            function(resultmods){
+                $scope.resultmods = resultmods;
+            },
+            function(error){
+                notify('error', error);
+            }
+        );
+    }
+    getResultmods();
 
     $scope.getResults = function(raceId){
         getResults(raceId);
@@ -205,12 +227,48 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
                 getResults(rid);
                 $scope.result.racenum = null;
                 $scope.result.racetime = null;
+                $scope.result.resultmodIds = [];
+                $scope.result.rollback = false;
                 focus('result-racenum');
             },
             function(error){
                 notify(error.type, error.msg);
             }
         );
+    }
+
+    $scope.applyResultmod = function(racenum, idname, rollback){
+        $scope.result.racenum = racenum;
+        $scope.result.racetime = null;
+        $scope.result.resultmodIds = [idname];
+        $scope.result.rollback = rollback;
+        entryService.applyResultmod(rid, $scope.result).then(
+            function(response){
+                getResults(rid);
+                $scope.result.racenum = null;
+                $scope.result.racetime = null;
+                $scope.result.resultmodIds = [];
+                $scope.result.rollback = false;
+                focus('result-racenum');
+            },
+            function(error){
+                notify(error.type, error.msg);
+            }
+        );
+    }
+
+    $scope.toggleResultmodSelection = function(idname){
+        var idx = $scope.result.resultmodIds.indexOf(idname);
+        if(idx > -1){
+            $scope.result.resultmodIds.splice(idname, 1);
+        }
+        else{
+            $scope.result.resultmodIds.push(idname);
+        }
+    }
+
+    $scope.containsResultmodSelection = function(idname){
+        return $scope.result.resultmodIds.indexOf(idname) > -1;
     }
 
     function notify(type, msg){
@@ -399,6 +457,101 @@ tmwcapp.controller('AuthCtrl', ['$scope', '$rootScope', 'authService', '$uibModa
                 function(){ $scope.userdata = {}; }
             );
         }        
+    }
+
+    function notify(type, msg){
+        $rootScope.$broadcast('notificationEvent', { type: type, msg: msg });
+    }
+  
+}]);
+
+tmwcapp.controller('ResultmodCtrl', ['$scope', '$rootScope', 'resultmodService', 'AppConfig', '$uibModal',
+  function ($scope, $rootScope, resultmodService, AppConfig, $uibModal) {
+
+    $scope.getResultmods = function(){
+        resultmodService.getResultmods().then(
+            function(resultmods){
+                $scope.resultmods = resultmods;
+            },
+            function(error){
+                notify(error.type, error.msg);
+            }
+        );
+    }
+
+    function deleteResultmod(){
+        resultmodService.deleteResultmod($scope.selected).then(
+            function(response){
+                $scope.getResultmods();
+            },
+            function(error){
+                notify(error.type, error.msg);
+            }
+        );
+    }
+
+    function updateResultmod(){
+        resultmodService.updateResultmod($scope.selected).then(
+            function(response){
+                $scope.getResultmods();
+            },
+            function(error){
+                notify(error.type, error.msg);
+            }
+        );
+    }
+
+    function createResultmod(){
+        resultmodService.createResultmod($scope.selected).then(
+            function(response){
+                $scope.getResultmods();
+            },
+            function(error){
+                notify(error.type, error.msg);
+            }
+        );
+    }
+
+    var open = function(){
+        var modalInstance = $uibModal.open({
+            templateUrl: 'views/dialog/resultmodDialog.html',
+            controller: 'ResultmodCtrl',
+            scope: $scope
+        });
+        return modalInstance.result;
+    }
+
+    $scope.delete = function(resultmod){
+        $scope.dialogMode = "DELETE";
+        $scope.dialogTitle = "Időeredmény módosítás törlése";
+        $scope.dialogBtnLabel = "Törlés";
+        $scope.selected = angular.copy(resultmod);
+        open().then(
+            function(){ deleteResultmod(); }, 
+            function(){ $scope.selected = {}; }
+        );
+    }
+
+    $scope.edit = function(resultmod){
+        $scope.dialogMode = "UPDATE";
+        $scope.dialogTitle = "Időeredmény módosítás módosítása";
+        $scope.dialogBtnLabel = "Mentés";
+        $scope.selected = angular.copy(resultmod);
+        open().then(
+            function(){ updateResultmod(); }, 
+            function(){ $scope.selected = {}; }
+        );
+    }
+
+    $scope.create = function(){
+        $scope.dialogMode = "CREATE";
+        $scope.dialogTitle = "Időeredmény módosítás létrehozása";
+        $scope.dialogBtnLabel = "Mentés";
+        $scope.selected = {};
+        open().then(
+            function(){ createResultmod(); }, 
+            function(){ $scope.selected = {}; }
+        );
     }
 
     function notify(type, msg){

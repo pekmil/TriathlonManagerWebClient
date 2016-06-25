@@ -1,0 +1,33 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="$dismiss()">&times</button>
+		<h4>{{dialogTitle}}</h4>
+	</div>
+	<div class="modal-body">
+    	<form role="form" name="resultmodForm" novalidate>
+			<div class="form-group col-md-4" ng-class="{ 'has-error' : resultmodForm.idname.$invalid && !resultmodForm.idname.$pristine }">
+				<label for="idname">Azonosító:</label>
+				<input type="text" name="idname" ng-model="selected.idname" ng-disabled="dialogMode === 'DELETE'" maxlength=50 required class="form-control" />
+				<p ng-show="resultmodForm.idname.$invalid && !resultmodForm.idname.$pristine" class="help-block">Azonosító megadása kötelező!</p>						
+			</div>
+			<div class="form-group col-md-8" ng-class="{ 'has-error' : resultmodForm.name.$invalid && !resultmodForm.name.$pristine }">
+				<label for="name">Megnevezés: </label>
+				<input type="text" name="name" ng-model="selected.name" ng-disabled="dialogMode === 'DELETE'" maxlength=100 required class="form-control" />
+				<p ng-show="resultmodForm.name.$invalid && !resultmodForm.name.$pristine" class="help-block">Megnevezés megadása kötelező!</p>	
+			</div>
+			<div class="form-group col-md-4" ng-class="{ 'has-error' : resultmodForm.plus.$invalid && !resultmodForm.plus.$pristine }">
+				<label for="plus">Növelő:</label>
+				<input type="checkbox" name="plus" ng-model="selected.plus" ng-disabled="dialogMode === 'DELETE'" />
+			</div>
+			<div class="form-group col-md-8" ng-class="{ 'has-error' : resultmodForm.time.$invalid && !resultmodForm.time.$pristine }">
+				<label for="time">Idő:</label>
+				<uib-timepicker ng-model="selected.time" show-seconds="true" show-meridian="false" show-spinners="false" ng-disabled="dialogMode === 'DELETE'" required></uib-timepicker>
+			    <p ng-show="resultmodForm.time.$invalid && !resultmodForm.time.$pristine" class="help-block">Az idő megadása kötelező!</p>
+			</div>				
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="$close()" ng-bind="dialogBtnLabel" ng-disabled="resultmodForm.$invalid"></button>
+		<button class="btn btn-primary" ng-click="$dismiss()">Mégse</button>
+	</div>
+</div>

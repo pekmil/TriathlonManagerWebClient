@@ -46,13 +46,14 @@
 	    	<div class="container">
 	    		<table class="table table-bordered">
 					<thead>
-						<tr><td colspan=5 class="bg-primary text-center header-level1"><b>{{results.selectedCategory.name | uppercase}}</b></td></tr>
+						<tr><td colspan=6 class="bg-primary text-center header-level1"><b>{{results.selectedCategory.name | uppercase}}</b></td></tr>
 						<tr class="text-center header-level2">
 							<td class="col-md-3"><b>Név</b></td>
 							<td class="col-md-1"><b>Rajtszám</b></td>
 							<td class="col-md-3"><b>Egyesület</b></td>
-							<td class="col-md-2"><b>Licensz</b></td>
-							<td class="col-md-3"><b>Idő</b></td>
+							<td class="col-md-1"><b>Licensz</b></td>
+							<td class="col-md-1"><b>Idő</b></td>
+							<td class="col-md-3"><b>Megjegyzés</b></td>
 						</tr>
 					</thead>
 				</table>
@@ -60,29 +61,31 @@
 	    	<div class="container" ng-repeat="(key, value) in results.raceresults.groupedResults">
 	    		<table class="table table-bordered" ng-show="value.maleResults">
 					<thead>
-						<tr><td colspan=5 class="bg-info text-center header-level3"><b>{{key | uppercase}} - FÉRFI</b></td></tr>
+						<tr><td colspan=6 class="bg-info text-center header-level3"><b>{{key | uppercase}} - FÉRFI</b></td></tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="r in value.maleResults | filter : filterNationalResults track by $index" ng-class="{ 'medalist' : isMedalist($index, r)}">
 							<td class="col-md-3">{{r.name}}</td>
 							<td class="col-md-1">{{r.racenum}}</td>
 							<td class="col-md-3">{{r.club}}</td>
-							<td class="col-md-2">{{r.licencenum}}</td>
-							<td class="col-md-3">{{r.racetime}}</td>
+							<td class="col-md-1">{{r.licencenum}}</td>
+							<td class="col-md-1">{{r.racetime}}</td>
+							<td class="col-md-3"><span ng-repeat="rm in r.resultmodNames">{{rm}}<br /></span></td>
 						</tr>
 					</tbody>
 	    		</table>
 	    		<table class="table table-bordered" ng-show="value.femaleResults">
 					<thead>
-						<tr><td colspan=5 class="bg-info text-center header-level3"><b>{{key | uppercase}} - NŐ</b></td></tr>
+						<tr><td colspan=6 class="bg-info text-center header-level3"><b>{{key | uppercase}} - NŐ</b></td></tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="r in value.femaleResults | filter : filterNationalResults track by $index" ng-class="{ 'medalist' : isMedalist($index, r)}">
 							<td class="col-md-3">{{r.name}}</td>
 							<td class="col-md-1">{{r.racenum}}</td>
 							<td class="col-md-3">{{r.club}}</td>
-							<td class="col-md-2">{{r.licencenum}}</td>
-							<td class="col-md-3">{{r.racetime}}</td>
+							<td class="col-md-1">{{r.licencenum}}</td>
+							<td class="col-md-1">{{r.racetime}}</td>
+							<td class="col-md-3"><span ng-repeat="rm in r.resultmodNames">{{rm}}<br /></span></td>
 						</tr>
 					</tbody>
 	    		</table>

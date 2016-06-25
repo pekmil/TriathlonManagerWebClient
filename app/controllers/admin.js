@@ -17,6 +17,9 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
         },
         modifyResult : {
             open : false
+        },
+        manageResultmods : {
+            open : false
         }
     };
     $scope.data = {};
@@ -253,7 +256,7 @@ tmwcapp.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, ent
         }
     }
 
-    $scope.containsEntryselection = function(racenum){
+    $scope.containsEntrySelection = function(racenum){
         return $scope.selectedRacenums.indexOf(racenum) > -1;
     }
 

@@ -1,0 +1,5 @@
+<div>
+	<p ng-repeat="rm in resultmods">
+		<input type="checkbox" ng-checked="r.resultmodList.indexOf(rm.idname) > -1" ng-click="applyResultmod(r.key.racenum, rm.idname, r.resultmodList.indexOf(rm.idname) > -1)" /> {{rm.name}}
+	</p>
+</div>

@@ -21,6 +21,11 @@
 					<uib-timepicker ng-model="result.racetime" show-seconds="true" show-meridian="false" required></uib-timepicker>
 				</div>
 				<div class="form-group">
+					<p ng-repeat="rm in resultmods">
+						<input type="checkbox" ng-checked="containsResultmodSelection(rm.idname)" ng-click="toggleResultmodSelection(rm.idname)" /> {{rm.name}}
+					</p>
+				</div>
+				<div class="form-group">
 					<button type="button" class="btn btn-primary" ng-disabled="resultForm.$invalid" ng-click="postResult()"><span class="glyphicon glyphicon-upload"></span> Rögzít</button>
 				</div>
 			</form>	
@@ -41,7 +46,7 @@
 			<tr ng-repeat="r in results | orderBy : resultOrderOptions.orderProperty : resultOrderOptions.orderReverse">
 				<td>{{r.contestant.name}}</td>
 				<td>{{r.key.racenum}}</td>
-				<td>{{r.racetime | date : 'HH:mm:ss'}}</td>
+				<td><span class="clickable" uib-popover-template="popoverOptions.templateUrl" popover-placement="right" popover-trigger="click" title="Kattints az eredménymódosító tételek alkalmazásához!">{{r.racetime | date : 'HH:mm:ss'}}</span></td>
 				<td>{{r.finishtime | date : 'yyyy-MM-dd HH:mm:ss'}}</td>
 				<td><span class="glyphicon glyphicon-pencil" title="Módosítások" ng-show="r.racetimemods" uib-popover="{{r.racetimemods}}" popover-trigger="mouseenter"></span></td>
 			</tr>

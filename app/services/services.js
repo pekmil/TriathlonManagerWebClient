@@ -267,3 +267,68 @@ tmwcapp.service('authService', ['$http', '$q', 'AppConfig',
     }
     
   }]);
+
+tmwcapp.service('resultmodService', ['$http', '$q', 'AppConfig',
+  function($http, $q, AppConfig){
+  
+    var serviceURL = AppConfig.serviceBaseURL + "resultmod";
+
+    return ({
+        getResultmods: getResultmods,
+        updateResultmod: updateResultmod,
+        createResultmod: createResultmod,
+        deleteResultmod: deleteResultmod
+    });
+    
+    function getResultmods() {
+        var request = $http({
+            method: "GET",
+            url: serviceURL
+        });
+        return(request.then(handleSuccess, handleError));
+    }
+
+    function updateResultmod(resultmod) {
+        var request = $http({
+            method: "PUT",
+            url: serviceURL + '/admin/' + resultmod.id,
+            data: resultmod
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+
+    function createResultmod(resultmod) {
+        var request = $http({
+            method: "POST",
+            url: serviceURL + '/admin',
+            data: resultmod
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function deleteResultmod(resultmod) {
+        var request = $http({
+            method: "DELETE",
+            url: serviceURL + '/admin/' + resultmod.id
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+
+     function handleError( response ) {
+        // The API response from the server should be returned in a
+        // nomralized format. However, if the request was not handled by the
+        // server (or what not handles properly - ex. server error), then we
+        // may have to normalize it on our end, as best we can.
+        if (!angular.isObject( response.data ) || !response.data.msg){
+            return($q.reject("Hiba: " + response.status + " - " + response.statusText));
+        }
+        // Otherwise, use expected error message.
+        return( $q.reject( response.data ) );
+    }
+    // I transform the successful response, unwrapping the application data
+    // from the API response payload.
+    function handleSuccess( response ) {
+        return( response.data );
+    }
+    
+  }]);
