@@ -1,7 +1,7 @@
 'use strict';
 
-tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceService', 'tournamentService', '$uibModal',
-  function($scope, $rootScope, $routeParams, raceService, tournamentService, $uibModal) {
+tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceService', 'tournamentService', 'parameterService', 'resultmodService', '$uibModal',
+  function($scope, $rootScope, $routeParams, raceService, tournamentService, parameterService, resultmodService, $uibModal) {
 
     var tid = $routeParams.tournamentId;
     if(tid === undefined){
@@ -89,6 +89,15 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
         return modalInstance.result;
     }
 
+    var openRaceadjustment = function(){        
+        var modalInstance = $uibModal.open({
+            templateUrl: 'views/dialog/raceadjustmentDialog.html',
+            controller: 'RaceCtrl',
+            scope: $scope
+        });
+        return modalInstance.result;
+    }
+
     $scope.create = function(){
         $scope.editMode = true;
         $scope.selected = {};
@@ -128,6 +137,44 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
 
     $scope.selectRace = function(race){
         $rootScope.selectedRace = race;
+    }
+
+    $scope.addRaceadjustmentDialog = function(raceId){
+        parameterService.getParameters('category').then(function(categories){$scope.categories = categories});
+        resultmodService.getResultmods().then(function(resultmods){$scope.resultmods = resultmods});
+        $scope.raceadjustment = {key : {raceId : raceId}};
+        $scope.dialogTitle = "Időkorrekció hozzáadása";
+        $scope.dialogBtnLabel = "Hozzáad";
+        openRaceadjustment().then(
+            function(){
+                $scope.raceadjustment.key.categoryId = $scope.raceadjustment.category.id;
+                $scope.raceadjustment.key.resultmodId = $scope.raceadjustment.resultmod.id;
+                $scope.addRaceadjustment($scope.raceadjustment);
+            }, 
+            function(){$scope.raceadjustment = {};}
+        );
+    }
+
+    $scope.addRaceadjustment = function(raceadjustment){
+        raceService.createRaceadjustment(raceadjustment).then(
+            function(response){
+                getRaces();
+            },
+            function(error){
+                alert(error);
+            }
+        );
+    }
+
+    $scope.removeRaceadjustment = function(key){
+        raceService.deleteRaceadjustment(key).then(
+            function(response){
+                getRaces();
+            },
+            function(error){
+                alert(error);
+            }
+        );
     }
 
     function alert(error){

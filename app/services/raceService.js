@@ -11,7 +11,9 @@ tmwcapp.service('raceService', ['$http', '$q', 'AppConfig',
         getTournamentRaces: getTournamentRaces,
         updateRace: updateRace,
         createRace: createRace,
-        deleteRace: deleteRace
+        deleteRace: deleteRace,
+        createRaceadjustment : createRaceadjustment,
+        deleteRaceadjustment : deleteRaceadjustment
 	});
 	
     function getRace(raceId) {
@@ -60,6 +62,23 @@ tmwcapp.service('raceService', ['$http', '$q', 'AppConfig',
         var request = $http({
             method: "DELETE",
             url: serviceURL + '/' + race.id
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+
+    function createRaceadjustment(raceadjustment) {
+        var request = $http({
+            method: "POST",
+            url: serviceURL + "/adjustment",
+            data: raceadjustment
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function deleteRaceadjustment(key) {
+        var request = $http({
+            method: "DELETE",
+            url: serviceURL + '/' + key.raceId + "/" + key.categoryId + "/" + key.resultmodId
         });
         return( request.then( handleSuccess, handleError ) );
     }

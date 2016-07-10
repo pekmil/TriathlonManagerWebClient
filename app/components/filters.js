@@ -29,3 +29,18 @@ tmwcapp.filter('statusString', function() {
 	}
   };
 });
+
+tmwcapp.filter('gender', function() {
+  return function(input) {
+    switch (input) {
+	    case 'MALE':
+	        return "férfi";
+	        break;
+	    case 'FEMALE':
+	        return "nő";
+	        break;
+	    default:
+	        return "N/A";
+	}
+  };
+});

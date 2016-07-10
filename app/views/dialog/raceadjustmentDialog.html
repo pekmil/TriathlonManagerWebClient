@@ -1,0 +1,37 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="$dismiss()">&times</button>
+		<h4>{{dialogTitle}}</h4>
+	</div>
+	<div class="modal-body">
+		<form role="form" name="raceadjustmentForm" novalidate>
+			<div class="form-group col-md-4" ng-class="{ 'has-error' : raceadjustmentForm.category.$invalid && !raceadjustmentForm.category.$pristine }">
+				<label for="category">Kategória:</label>
+				<select name="category" ng-model="raceadjustment.category" ng-options="c.name for c in categories track by c.id" required class="form-control">
+			      <option value="">--Válassz kategóriát--</option>
+			    </select>
+			    <p ng-show="raceadjustmentForm.category.$invalid && !raceadjustmentForm.gender.$pristine" class="help-block">A kategória megadása kötelező!</p>
+			</div>
+			<div class="form-group col-md-4" ng-class="{ 'has-error' : raceadjustmentForm.gender.$invalid && !raceadjustmentForm.gender.$pristine }">
+				<label for="gender">Nem:</label>
+				<select name="gender" ng-model="raceadjustment.gender" required class="form-control">
+				  <option value="">--Válassz nemet--</option>
+			      <option value="MALE">férfi</option>
+			      <option value="FEMALE">nő</option>
+			    </select>
+			    <p ng-show="raceadjustmentForm.gander.$invalid && !raceadjustmentForm.gender.$pristine" class="help-block">A nem megadása kötelező!</p>
+			</div>
+			<div class="form-group col-md-4" ng-class="{ 'has-error' : raceadjustmentForm.resultmod.$invalid && !raceadjustmentForm.resultmod.$pristine }">
+				<label for="resultmod">Körverseny:</label>
+				<select name="resultmod" ng-model="raceadjustment.resultmod" ng-options="rm.name for rm in resultmods track by rm.id" required class="form-control">
+			      <option value="">--Válassz módosító tételt--</option>
+			    </select>
+			    <p ng-show="raceadjustmentForm.resultmod.$invalid && !raceadjustmentForm.resultmod.$pristine" class="help-block">A módosító tétel megadása kötelező!</p>
+			</div>			
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="$close()" ng-bind="dialogBtnLabel" ng-disabled="raceadjustmentForm.$invalid"></button>
+		<button class="btn btn-primary" ng-click="$dismiss()">Mégse</button>
+	</div>
+</div>
