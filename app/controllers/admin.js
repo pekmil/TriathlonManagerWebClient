@@ -23,69 +23,11 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
         }
     };
     $scope.data = {};
-    $scope.csvUploadURL = AppConfig.serviceBaseURL + 'licence/uploadcsv';
-    $scope.expectedFileType = 'application/vnd.ms-excel';
-    $scope.expectedFileExt = 'csv';
-    $scope.expectedCSVHeader = 'l_id;l_name;l_licencenum;l_birthplace;l_birthyear';
-    $scope.expectedDataLinePattern = /\d{1,};.{1,100};.{1,50};.{0,100};\d{4}/;
-    $scope.csvValidationError = true;
-
-    $scope.csvUploadError = function(response){
-        if(angular.isObject(response.data)){
-            notify(response.data.type, response.data.msg + '\n' + response.data.params.errorMsg);
-            $scope.lastUploadedFileName = null;
-        }
-    }
-
-    $scope.csvUploadSuccess = function(response){
-        if(angular.isObject(response.data)){
-            notify(response.data.type, response.data.msg);
-            $scope.lastUploadedFileName = response.data.params.uploadFileName;
-        }
-    }
-
-    $scope.csvValidateContent = function(file){
-        var reader = new FileReader();
-        if(file.type !== $scope.expectedFileType || !file.name.endsWith($scope.expectedFileExt)){
-            notify('warning', 'A kiválasztott fájl formátuma nem megfelelő!');
-            return;
-        }
-        reader.onload = function(onLoadEvent) {
-            var lines = onLoadEvent.target.result.split('\n');
-            if(lines.length && !lines[0].match($scope.expectedCSVHeader)){
-                $scope.$apply(function(){
-                    notify('warning', 'Nem megfelelő fejléc sor a kiválasztott fájlban!');
-                });
-                return;
-            }
-            var count = 0;
-            for(var i = 1; i <= lines.length - 1; ++i){
-                var line = lines[i];
-                if(!line.match($scope.expectedDataLinePattern)){
-                    $scope.$apply(function(){
-                        notify('warning', 'Hibás adatsor:\n' + line);
-                    });
-                    return;                    
-                }
-                ++count;
-            };
-            $scope.csvValidationError = false;
-            $scope.$apply(function(){
-                notify('success', 'Adatsorok elenőrzése sikeres! (' + count + ' db)');
-            });
-        };
-        reader.onloadstart = function(onLoadStartEvent){
-            $scope.$apply(function(){
-                $rootScope.$broadcast("loader_show");
-            });
-        };
-        reader.onloadend = function(onLoadEndEvent){
-            $scope.$apply(function(){
-                $rootScope.$broadcast("loader_hide");
-            });
-        };
-        reader.readAsText(file);
-    }
+    $scope.csvUploadOptions = {
+        csvUploadURL : AppConfig.serviceBaseURL + 'licence/uploadcsv',        
+        expectedCSVHeader : 'l_id;l_name;l_licencenum;l_birthplace;l_birthyear',
+        expectedDataLinePattern : /\d{1,};.{1,100};.{1,50};.{0,100};\d{4}/
+    };    
 
     function getRaces(){
         raceService.getRaces().then(
@@ -194,8 +136,8 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
         );
     }
 
-    $scope.processCSVLicences = function(){
-        adminService.processCSVLicences($scope.lastUploadedFileName).then(
+    $scope.processCSVLicences = function(filename){
+        adminService.processCSVLicences(filename).then(
             function(response){
                 notify(response.type, response.msg);
             },

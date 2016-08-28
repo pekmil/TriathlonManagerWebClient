@@ -1,8 +1,8 @@
 'use strict';
 
 tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filter', '$location', 
-                                 'entryService', 'raceService', 'parameterService', 'invoiceService', 'licenceService', 'AppConfig', '$uibModal',
-  function($scope, $rootScope, $routeParams, $filter, $location, entryService, raceService, parameterService, invoiceService, licenceService, AppConfig, $uibModal) {
+                                 'entryService', 'raceService', 'parameterService', 'invoiceService', 'licenceService', 'fileService', 'AppConfig', '$uibModal',
+  function($scope, $rootScope, $routeParams, $filter, $location, entryService, raceService, parameterService, invoiceService, licenceService, fileService, AppConfig, $uibModal) {
 
     $scope.popoverOptions = {
         templateUrl: 'views/partial/entryOptionsPopover.html',
@@ -19,12 +19,11 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
         "orderedAgegroups" : [],
         "familyentry" : []
     };
-    $scope.csvUploadURL = AppConfig.serviceBaseURL + 'entry/uploadcsv';
-    $scope.expectedFileType = 'application/vnd.ms-excel';
-    $scope.expectedFileExt = 'csv';
-    $scope.expectedCSVHeader = 'name;racenum;gender;birthyear;category;fromtown;club;licencenum;agegroup;paid';
-    $scope.expectedDataLinePattern = /.{1,100};[1-9]\d{0,2};(MALE|FEMALE);[1-9]\d{3};.{1,100};.{0,100};.{0,100};.{0,50};.{1,100};(IGEN|NEM|[1-9]\d{0,10})/;
-    $scope.csvValidationError = true;
+    $scope.csvUploadOptions = {
+        csvUploadURL : AppConfig.serviceBaseURL + 'entry/uploadcsv',
+        expectedCSVHeader : 'name;racenum;gender;birthyear;category;fromtown;club;licencenum;agegroup;paid',
+        expectedDataLinePattern : /.{1,100};[1-9]\d{0,2};(MALE|FEMALE);[1-9]\d{3};.{1,100};.{0,100};.{0,100};.{0,50};.{1,100};(IGEN|NEM|[1-9]\d{0,10})/
+    };
     $scope.entryOrderOptions = {
         orderProperty : "entrytime",
         orderReverse : true,
@@ -61,63 +60,6 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
         catch(e){
             return $scope.entrySearchExpr;
         }
-    }
-     
-    $scope.csvUploadError = function(response){
-        if(angular.isObject(response.data)){
-            notify(response.data.type, response.data.msg + '\n' + response.data.params.errorMsg);
-            $scope.lastUploadedFileName = null;
-        }
-    }
-
-    $scope.csvUploadSuccess = function(response){
-        if(angular.isObject(response.data)){
-            notify(response.data.type, response.data.msg);
-            $scope.lastUploadedFileName = response.data.params.uploadFileName;
-        }
-    }
-
-    $scope.csvValidateContent = function(file){
-        var reader = new FileReader();
-        if(file.type !== $scope.expectedFileType || !file.name.endsWith($scope.expectedFileExt)){
-            notify('warning', 'A kiválasztott fájl formátuma nem megfelelő!');
-            return;
-        }
-        reader.onload = function(onLoadEvent) {
-            var lines = onLoadEvent.target.result.split('\n');
-            if(lines.length && !lines[0].match($scope.expectedCSVHeader)){
-                $scope.$apply(function(){
-                    notify('warning', 'Nem megfelelő fejléc sor a kiválasztott fájlban!');
-                });
-                return;
-            }
-            var count = 0;
-            for(var i = 1; i <= lines.length - 1; ++i){
-                var line = lines[i];
-                if(!line.match($scope.expectedDataLinePattern)){
-                    $scope.$apply(function(){
-                        notify('warning', 'Hibás adatsor:\n' + line);
-                    });
-                    return;                    
-                }
-                ++count;
-            };
-            $scope.csvValidationError = false;
-            $scope.$apply(function(){
-                notify('success', 'Adatsorok elenőrzése sikeres! (' + count + ' db)');
-            });
-        };
-        reader.onloadstart = function(onLoadStartEvent){
-            $scope.$apply(function(){
-                $rootScope.$broadcast("loader_show");
-            });
-        };
-        reader.onloadend = function(onLoadEndEvent){
-            $scope.$apply(function(){
-                $rootScope.$broadcast("loader_hide");
-            });
-        };
-        reader.readAsText(file);
     }
 
     $scope.setAgegroup = function(){
@@ -194,6 +136,22 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
         getRaceEntries(raceId);
     }
 
+    $scope.getStartlist = function(categoryid){
+        entryService.getStartlist(rid, categoryid).then(
+            function(response){
+                if(response.params && response.params.filename){
+                    fileService.downloadFile(response.params.filename);
+                }
+                else{
+                    notify(response.type, response.msg);
+                }
+            },
+            function(error){
+                notify('error', error);
+            }
+        );
+    }
+
     function getRaceFamilyEntries(raceId){
         entryService.getRaceFamilyEntries(raceId).then(
             function(familyentries){
@@ -214,9 +172,19 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
         family : false
     }
     $scope.getRaceResults = function(){
-        entryService.getRaceResults(rid, $scope.results).then(
+        entryService.getRaceResultsObject(rid, $scope.results).then(
             function(results){
                 $scope.results.raceresults = results;
+            },
+            function(error){
+                notify('error', error);
+            }
+        );
+    }
+     $scope.getRaceResultsExcel = function(){
+        entryService.getRaceResultsExcel(rid, $scope.results).then(
+            function(response){
+                fileService.downloadFile(response.params.filename);
             },
             function(error){
                 notify('error', error);
@@ -235,8 +203,8 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
         return !$scope.results.nationalResults || result.licencenum;
     }
 
-    $scope.processCSVEntries = function(){
-        entryService.processCSVEntries(rid, $scope.lastUploadedFileName).then(
+    $scope.processCSVEntries = function(filename){
+        entryService.processCSVEntries(rid, filename).then(
             function(response){
                 notify('success', 'Beolvasott rekordok: ' + response);
                 getRaceEntries(rid);

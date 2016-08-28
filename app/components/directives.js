@@ -130,6 +130,90 @@ tmwcapp.directive('fileUpload', ['fileService', function (fileService) {
     };
 }]);
 
+tmwcapp.directive('csvFileUpload', ['notificationService', '$rootScope', function (notificationService, $rootScope) {
+    return {
+        restrict : 'E',
+        scope : {
+            options : '=',
+            onprocess : '&'
+        },
+        controller : function($scope){
+            $scope.accordionOptions = {
+                open : false
+            };
+            $scope.csvValidationError = true;
+            $scope.options.expectedFileType = 'application/vnd.ms-excel';
+            $scope.options.expectedFileExt = 'csv';
+
+            $scope.csvUploadError = function(response){
+                if(angular.isObject(response.data)){
+                    notificationService.notify(response.data.type, response.data.msg + '\n' + response.data.params.errorMsg);
+                    $scope.lastUploadedFileName = null;
+                }
+            }
+
+            $scope.csvUploadSuccess = function(response){
+                if(angular.isObject(response.data)){
+                    notificationService.notify(response.data.type, response.data.msg);
+                    $scope.lastUploadedFileName = response.data.params.uploadFileName;
+                }
+            }
+
+            $scope.csvValidateContent = function(file){
+                var reader = new FileReader();
+                if(file.type !== $scope.options.expectedFileType || !file.name.endsWith($scope.options.expectedFileExt)){
+                    notificationService.notify('warning', 'A kiválasztott fájl formátuma nem megfelelő!');
+                    return;
+                }
+                reader.onload = function(onLoadEvent) {
+                    var lines = onLoadEvent.target.result.split('\n');
+                    if(lines.length && !lines[0].match($scope.options.expectedCSVHeader)){
+                        $scope.$apply(function(){
+                            notificationService.notify('warning', 'Nem megfelelő fejléc sor a kiválasztott fájlban!');
+                        });
+                        return;
+                    }
+                    var count = 0;
+                    for(var i = 1; i <= lines.length - 1; ++i){
+                        var line = lines[i];
+                        if(!line.match($scope.options.expectedDataLinePattern)){
+                            $scope.$apply(function(){
+                                notificationService.notify('warning', 'Hibás adatsor:\n' + line);
+                            });
+                            return;                    
+                        }
+                        ++count;
+                    };
+                    $scope.csvValidationError = false;
+                    $scope.$apply(function(){
+                        notificationService.notify('success', 'Adatsorok elenőrzése sikeres! (' + count + ' db)');
+                    });
+                };
+                reader.onloadstart = function(onLoadStartEvent){
+                    $scope.$apply(function(){
+                        $rootScope.$broadcast("loader_show");
+                    });
+                };
+                reader.onloadend = function(onLoadEndEvent){
+                    $scope.$apply(function(){
+                        $rootScope.$broadcast("loader_hide");
+                    });
+                };
+                reader.readAsText(file);
+            }
+        },
+        template :  '<uib-accordion class="hidden-print">' +
+                        '<uib-accordion-group is-open="accordionOptions.open">' +
+                            '<uib-accordion-heading>' +
+                                'Beolvasás CSV fájlból <i class="pull-right glyphicon" ng-class="{\'glyphicon-chevron-down\': accordionOptions.open, \'glyphicon-chevron-right\': !accordionOptions.open}"></i>' +
+                            '</uib-accordion-heading>' +
+                          '<file-upload url="options.csvUploadURL" onsuccess="csvUploadSuccess" onerror="csvUploadError" onfilechange="csvValidateContent"></file-upload>' +
+                          '<button type="button" class="btn btn-primary" ng-disabled="!lastUploadedFileName || csvValidationError" ng-click="onprocess()(lastUploadedFileName)"><span class="glyphicon glyphicon-cloud-upload"></span> Beolvas</button>' +
+                        '</uib-accordion-group>' +
+                    '</uib-accordion>'
+    };
+}]);
+
 tmwcapp.directive('orderable', function ($compile) {
     return {
         restrict : 'A',

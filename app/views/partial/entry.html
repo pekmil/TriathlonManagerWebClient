@@ -1,20 +1,19 @@
 <div class="container">	
 	<h3 ng-show="selectedRace">Nevezések - Verseny: {{selectedRace.name}} ({{selectedRace.startdate | date : 'yyyy-MM-dd'}}) <span class="glyphicon glyphicon-refresh clickable" ng-click="getRaceEntries(selectedRace.id)" title="Frissít"></span></h3>
 	<div class="container hidden-print">
-		<button class="btn btn-primary" ng-click="create()"><span class="glyphicon glyphicon-plus"></span> Új nevezés</button>
+		<div class="dropdown pull-left">
+		  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Rajtlista
+		  <span class="caret"></span></button>
+		  <ul class="dropdown-menu list-group">
+		    <li ng-repeat="c in parameters['category']" class="list-group-item"><span class="clickable" ng-click="getStartlist(c.id)">{{c.name}}</span></li>
+		  </ul>
+		</div>
+		<button class="btn btn-primary" ng-click="create()"><span class="glyphicon glyphicon-plus"></span> Új nevezés</button>		
 		<a ng-show="selectedRace" href="#/results/{{selectedRace.id}}" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span> Eredmények</a>
 		<a ng-show="selectedRace" href="#/invoices/{{selectedRace.id}}" class="btn btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Számla igények</a>
 		<a ng-show="selectedRace" href="#/familyentries/{{selectedRace.id}}" class="btn btn-primary"><i class="fa fa-users"></i> Családi nevezések</a>
 	</div>
-	<uib-accordion class="hidden-print">
-	    <uib-accordion-group is-open="accordionOptions.open">
-	    	<uib-accordion-heading>
-        		Beolvasás CSV fájlból <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionOptions.open, 'glyphicon-chevron-right': !accordionOptions.open}"></i>
-      		</uib-accordion-heading>
-	      <file-upload url='csvUploadURL' onsuccess="csvUploadSuccess" onerror="csvUploadError" onfilechange="csvValidateContent"></file-upload>
-	      <button type="button" class="btn btn-primary" ng-disabled="!lastUploadedFileName || csvValidationError" ng-click="processCSVEntries()"><span class="glyphicon glyphicon-cloud-upload"></span> Beolvas</button>
-	    </uib-accordion-group>
-	</uib-accordion>			
+	<csv-file-upload options="csvUploadOptions" onprocess="processCSVEntries"></csv-file-upload>
 	<search-field searchexpr="entrySearchExpr" class="hidden-print"></search-field>
    	<table class="table table-striped table-bordered table-hover" ng-show="entries.length">
 		<thead>

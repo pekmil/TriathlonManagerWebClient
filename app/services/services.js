@@ -10,6 +10,20 @@ tmwcapp.factory('focus', function($timeout, $window) {
     };
   });
 
+tmwcapp.service('notificationService', ['$rootScope',
+  function($rootScope){
+
+    return {
+        notify : notify
+    }
+
+    function notify(type, msg){
+        $rootScope.$broadcast('notificationEvent', { type: type, msg: msg });
+    }
+
+  }
+]);
+
 tmwcapp.service('parameterService', ['$http', '$q', 'AppConfig',
   function($http, $q, AppConfig){
   
@@ -158,10 +172,13 @@ tmwcapp.service('invoiceService', ['$http', '$q', 'AppConfig',
     
   }]);
 
-tmwcapp.service('fileService', ['$http', function ($http) {
+tmwcapp.service('fileService', ['$http', '$window', 'AppConfig', function ($http, $window, AppConfig) {
+
+    var endpoint = AppConfig.serviceBaseURL + 'entry/getdocument/'
 
     return {
-        uploadFile : uploadFileToUrl
+        uploadFile : uploadFileToUrl,
+        downloadFile : downloadFile
     }
     
     function uploadFileToUrl(file, uploadUrl){
@@ -172,6 +189,10 @@ tmwcapp.service('fileService', ['$http', function ($http) {
             headers: {'Content-Type': undefined}
         })
         return request;
+    }
+
+    function downloadFile(filename){
+        $window.open(endpoint + filename);
     }
 
 }]);

@@ -18,8 +18,10 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
         getFinishedResults : getFinishedResults,
         postResult : postResult,
         applyResultmod : applyResultmod,
-        getRaceResults : getRaceResults,
-        getRaceFamilyEntries : getRaceFamilyEntries
+        getRaceResultsObject : getRaceResultsObject,
+        getRaceResultsExcel : getRaceResultsExcel,
+        getRaceFamilyEntries : getRaceFamilyEntries,
+        getStartlist : getStartlist
 	});
 
     function getRaceEntries(raceId) {
@@ -38,17 +40,36 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
         return(request.then(handleSuccess, handleError));
     }
 
-    function getRaceResults(raceId, params) {
-        var categoryId = params.selectedCategory ? params.selectedCategory.id : 0;
-        var national = params.national ? 1 : 0;
-        var absolute = params.absolute ? 1 : 0;
-        var team = params.team ? 1 : 0;
-        var family = params.family ? 1 : 0;
+    function getStartlist(raceId, categoryId) {
         var request = $http({
             method: "GET",
-            url: serviceURL + '/raceresults/' + raceId + '/' + categoryId + '?national=' + national + '&absolute=' + absolute + '&team=' + team + '&family=' + family
+            url: serviceURL + '/startlist/' + raceId + '/' + categoryId
         });
         return(request.then(handleSuccess, handleError));
+    }
+
+    function getRaceResults(raceId, params, endpoint) {
+        var categoryId = params.selectedCategory ? params.selectedCategory.id : 0;
+        var resultParams = {
+            national : params.national,
+            absolute : params.absolute,
+            team : params.team,
+            family : params.family
+        }
+        var request = $http({
+            method: "POST",
+            url: serviceURL + '/' + endpoint + '/' + raceId + '/' + categoryId,
+            data: resultParams
+        });
+        return(request.then(handleSuccess, handleError));
+    }
+
+    function getRaceResultsObject(raceId, params) {
+        return getRaceResults(raceId, params, 'raceresults');
+    }
+
+    function getRaceResultsExcel(raceId, params) {
+        return getRaceResults(raceId, params, 'resultlist');
     }
 
     function getEntry(raceId, racenum) {

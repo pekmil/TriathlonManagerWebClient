@@ -32,15 +32,13 @@
 				</div>
 				<button type="button" class="btn btn-primary" ng-disabled="!data.selectedRace" ng-click="deleteRaceData()"><span class="glyphicon glyphicon-trash"></span> Törlés</button>
 			</form>
-	    </uib-accordion-group>
+	    </uib-accordion-group>	    
 	    <uib-accordion-group is-open="accordionOptions.manageLicenceData.open">
 	    	<uib-accordion-heading>
-        		Licenszadatok kezelése <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionOptions.manageLicenceData.open, 'glyphicon-chevron-right': !accordionOptions.manageLicenceData.open}"></i>
+        		Licenszadatok kezelése <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionOptions.modifyResult.open, 'glyphicon-chevron-right': !accordionOptions.modifyResult.open}"></i>
       		</uib-accordion-heading>
-      		<label>Beolvasás CSV fájlból</label>
-	      	<file-upload url='csvUploadURL' onsuccess="csvUploadSuccess" onerror="csvUploadError" onfilechange="csvValidateContent"></file-upload>
-	      	<button type="button" class="btn btn-primary" ng-disabled="!lastUploadedFileName || csvValidationError" ng-click="processCSVLicences()"><span class="glyphicon glyphicon-cloud-upload"></span> Beolvas</button>
-	      	<br /><hr /><br />
+	    	<csv-file-upload options="csvUploadOptions" onprocess="processCSVLicences"></csv-file-upload>
+	      	<hr />
 	      	<label>Licenszadatok törlése:</label>
 	      	<button type="button" class="btn btn-primary" ng-click="deleteLicenceData()"><span class="glyphicon glyphicon-trash"></span> Töröl</button>
 	    </uib-accordion-group>
