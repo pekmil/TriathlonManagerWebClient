@@ -14,7 +14,6 @@ tmwcapp.factory('httpInterceptor', function ($q, $rootScope, $log) {
             if ((--numLoadings) === 0) {
                 $rootScope.$broadcast("loader_hide");
             }
-
             return response || $q.when(response);
         },
         responseError: function (response) {

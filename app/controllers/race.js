@@ -1,7 +1,7 @@
 'use strict';
 
-tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceService', 'tournamentService', 'parameterService', 'resultmodService', '$uibModal',
-  function($scope, $rootScope, $routeParams, raceService, tournamentService, parameterService, resultmodService, $uibModal) {
+tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceService', 'tournamentService', 'parameterService', 'resultmodService', 'notificationService', '$uibModal',
+  function($scope, $rootScope, $routeParams, raceService, tournamentService, parameterService, resultmodService, notificationService, $uibModal) {
 
     var tid = $routeParams.tournamentId;
     if(tid === undefined){
@@ -27,8 +27,8 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
             function(races){
                 $scope.races = races;                
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -41,8 +41,8 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
                     $scope.selectedTournament = races[0].tournament;
                 }
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -52,8 +52,8 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
             function(response){
                 getRaces();
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -63,8 +63,8 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
             function(response){
                 getRaces();
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -74,8 +74,8 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
             function(response){
                 getRaces();
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -160,8 +160,8 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
             function(response){
                 getRaces();
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -171,14 +171,10 @@ tmwcapp.controller('RaceCtrl', ['$scope', '$rootScope', '$routeParams', 'raceSer
             function(response){
                 getRaces();
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
-    }
-
-    function alert(error){
-        $rootScope.$broadcast('notificationEvent', { type: 'danger', msg: error });
     }
 
   }]);

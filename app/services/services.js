@@ -24,8 +24,34 @@ tmwcapp.service('notificationService', ['$rootScope',
   }
 ]);
 
-tmwcapp.service('parameterService', ['$http', '$q', 'AppConfig',
-  function($http, $q, AppConfig){
+tmwcapp.service('responseHandler', ['$q', '$http',
+  function($q, $http){
+
+    return {
+        handle : handle
+    }
+
+    function handle(requestObject){
+        var request = $http(requestObject);
+        return(request.then(handleSuccess, handleError));
+    }
+
+    function handleError(response) {
+        if(!angular.isObject(response.data) || !response.data.msg){
+            return($q.reject({type : "error", msg : "Hiba: " + response.status + " - " + response.statusText}));
+        }
+        return($q.reject(response.data));
+    }
+    
+    function handleSuccess( response ) {
+        return(response.data);
+    }
+
+  }
+]);
+
+tmwcapp.service('parameterService', ['$http', '$q', 'AppConfig', 'responseHandler',
+  function($http, $q, AppConfig, responseHandler){
   
     var serviceBaseURL = AppConfig.serviceBaseURL;
 
@@ -39,76 +65,59 @@ tmwcapp.service('parameterService', ['$http', '$q', 'AppConfig',
 	});
 	
 	function getParameters(type) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceBaseURL + type
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function updateParameter(type, parameter) {
-        var request = $http({
+        var request = {
             method: "PUT",
             url: serviceBaseURL + type + '/' + parameter.id,
             data: parameter
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function createParameter(type, parameter) {
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceBaseURL + type,
             data: parameter
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
     
     function deleteParameter(type, parameter) {
-        var request = $http({
+        var request = {
             method: "DELETE",
             url: serviceBaseURL + type + '/' + parameter.id
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function incrementAgegroupYears() {
-        var request = $http({
+        var request = {
             method: "PUT",
             url: serviceBaseURL + 'agegroup/incrementyears',
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function decrementAgegroupYears() {
-        var request = $http({
+        var request = {
             method: "PUT",
             url: serviceBaseURL + 'agegroup/decrementyears',
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-
-     function handleError( response ) {
-        // The API response from the server should be returned in a
-        // nomralized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (!angular.isObject( response.data ) || !response.data.message){
-            return($q.reject("Hiba: " + response.status + " - " + response.statusText));
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // I transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
+        };
+        return responseHandler.handle(request);
     }
 	
   }]);
 
-tmwcapp.service('invoiceService', ['$http', '$q', 'AppConfig',
-  function($http, $q, AppConfig){
+tmwcapp.service('invoiceService', ['$http', '$q', 'AppConfig', 'responseHandler',
+  function($http, $q, AppConfig, responseHandler){
   
     var serviceURL = AppConfig.serviceBaseURL + "invoice";
 
@@ -120,54 +129,37 @@ tmwcapp.service('invoiceService', ['$http', '$q', 'AppConfig',
     });
     
     function getInvoices(rid) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/rid/' + rid
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function updateInvoice(invoice) {
-        var request = $http({
+        var request = {
             method: "PUT",
             url: serviceURL + '/' + invoice.id,
             data: invoice
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function createInvoice(invoice) {
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL,
             data: invoice
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
     
     function deleteInvoice(invoice) {
-        var request = $http({
+        var request = {
             method: "DELETE",
             url: serviceURL + '/' + invoice.id
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-
-     function handleError( response ) {
-        // The API response from the server should be returned in a
-        // nomralized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (!angular.isObject( response.data ) || !response.data.message){
-            return($q.reject("Hiba: " + response.status + " - " + response.statusText));
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // I transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
+        };
+        return responseHandler.handle(request);
     }
     
   }]);
@@ -234,8 +226,8 @@ tmwcapp.service('WSNotification', ['$websocket', '$rootScope', '$interval', 'App
 
 }]);
 
-tmwcapp.service('authService', ['$http', '$q', 'AppConfig',
-  function($http, $q, AppConfig){
+tmwcapp.service('authService', ['$http', '$q', 'AppConfig', 'responseHandler',
+  function($http, $q, AppConfig, responseHandler){
   
     var serviceURL = AppConfig.serviceBaseURL + "auth";
 
@@ -246,51 +238,34 @@ tmwcapp.service('authService', ['$http', '$q', 'AppConfig',
     });
     
     function login(userdata) {
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL + '/login/',
             data: userdata
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function status() {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/status'
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function logout() {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/logout'
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-
-    function handleError( response ) {
-        // The API response from the server should be returned in a
-        // nomralized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (!angular.isObject( response.data ) || !response.data.msg){
-            return($q.reject("Hiba: " + response.status + " - " + response.statusText));
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data ) );
-    }
-    // I transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
+        };
+        return responseHandler.handle(request);
     }
     
   }]);
 
-tmwcapp.service('resultmodService', ['$http', '$q', 'AppConfig',
-  function($http, $q, AppConfig){
+tmwcapp.service('resultmodService', ['$http', '$q', 'AppConfig', 'responseHandler',
+  function($http, $q, AppConfig, responseHandler){
   
     var serviceURL = AppConfig.serviceBaseURL + "resultmod";
 
@@ -302,54 +277,37 @@ tmwcapp.service('resultmodService', ['$http', '$q', 'AppConfig',
     });
     
     function getResultmods() {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function updateResultmod(resultmod) {
-        var request = $http({
+        var request = {
             method: "PUT",
             url: serviceURL + '/admin/' + resultmod.id,
             data: resultmod
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function createResultmod(resultmod) {
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL + '/admin',
             data: resultmod
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
     
     function deleteResultmod(resultmod) {
-        var request = $http({
+        var request = {
             method: "DELETE",
             url: serviceURL + '/admin/' + resultmod.id
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-
-     function handleError( response ) {
-        // The API response from the server should be returned in a
-        // nomralized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (!angular.isObject( response.data ) || !response.data.msg){
-            return($q.reject("Hiba: " + response.status + " - " + response.statusText));
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data ) );
-    }
-    // I transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
+        };
+        return responseHandler.handle(request);
     }
     
   }]);

@@ -24,8 +24,8 @@ tmwcapp.controller('WelcomeCtrl', function ($scope, AppConfig) {
   
 });
 
-tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService', '$uibModal',
-  function ($scope, $rootScope, parameterService, $uibModal) {
+tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService', '$uibModal', 'notificationService',
+  function ($scope, $rootScope, parameterService, $uibModal, notificationService) {
 
     getParameters("category");
     getParameters("agegroup");
@@ -48,8 +48,8 @@ tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService',
                   $scope.families = parameters;
                 }
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -59,8 +59,8 @@ tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService',
             function(response){
                 getParameters(type);
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -70,8 +70,8 @@ tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService',
             function(response){
                 getParameters(type);
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -81,8 +81,8 @@ tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService',
             function(response){
                 getParameters(type);
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -137,8 +137,8 @@ tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService',
             function(response){
                 getParameters('agegroup');
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -148,20 +148,16 @@ tmwcapp.controller('ParameterCtrl', ['$scope', '$rootScope', 'parameterService',
             function(response){
                 getParameters('agegroup');
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
-    }
-
-     function alert(error){
-        $rootScope.$broadcast('notificationEvent', { type: 'danger', msg: error });
     }
   
 }]);
 
-tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entryService', 'raceService', 'resultmodService', 'focus', '$uibModal',
-  function ($scope, $rootScope, $routeParams, entryService, raceService, resultmodService, focus, $uibModal) {
+tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entryService', 'raceService', 'resultmodService', 'focus', '$uibModal', 'notificationService',
+  function ($scope, $rootScope, $routeParams, entryService, raceService, resultmodService, focus, $uibModal, notificationService) {
 
     $scope.resultOrderOptions = {
         orderProperty : "finishtime",
@@ -199,8 +195,8 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
             function(results){
                 $scope.results = results;
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -210,8 +206,8 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
             function(resultmods){
                 $scope.resultmods = resultmods;
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -231,8 +227,8 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
                 $scope.result.rollback = false;
                 focus('result-racenum');
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -251,8 +247,8 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
                 $scope.result.rollback = false;
                 focus('result-racenum');
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -270,15 +266,11 @@ tmwcapp.controller('ResultCtrl', ['$scope', '$rootScope', '$routeParams', 'entry
     $scope.containsResultmodSelection = function(idname){
         return $scope.result.resultmodIds.indexOf(idname) > -1;
     }
-
-    function notify(type, msg){
-        $rootScope.$broadcast('notificationEvent', { type: type, msg: msg });
-    }
   
 }]);
 
-tmwcapp.controller('InvoiceCtrl', ['$scope', '$rootScope', '$routeParams', '$filter', 'invoiceService', 'raceService', 'AppConfig', '$uibModal',
-  function ($scope, $rootScope, $routeParams, $filter, invoiceService, raceService, AppConfig, $uibModal) {
+tmwcapp.controller('InvoiceCtrl', ['$scope', '$rootScope', '$routeParams', '$filter', 'invoiceService', 'raceService', 'AppConfig', '$uibModal', 'notificationService',
+  function ($scope, $rootScope, $routeParams, $filter, invoiceService, raceService, AppConfig, $uibModal, notificationService) {
 
     $scope.entryFees = AppConfig.entryFees;
 
@@ -315,8 +307,8 @@ tmwcapp.controller('InvoiceCtrl', ['$scope', '$rootScope', '$routeParams', '$fil
                     });
                 }
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -326,8 +318,8 @@ tmwcapp.controller('InvoiceCtrl', ['$scope', '$rootScope', '$routeParams', '$fil
             function(response){
                 getInvoices(rid);
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -337,8 +329,8 @@ tmwcapp.controller('InvoiceCtrl', ['$scope', '$rootScope', '$routeParams', '$fil
             function(response){
                 getInvoices(rid);
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -376,15 +368,11 @@ tmwcapp.controller('InvoiceCtrl', ['$scope', '$rootScope', '$routeParams', '$fil
             function(){ $scope.selected = {}; }
         );
     }
-
-     function alert(error){
-        $rootScope.$broadcast('notificationEvent', { type: 'danger', msg: error });
-    }
   
 }]);
 
-tmwcapp.controller('AuthCtrl', ['$scope', '$rootScope', 'authService', '$uibModal',
-  function ($scope, $rootScope, authService, $uibModal) {
+tmwcapp.controller('AuthCtrl', ['$scope', '$rootScope', 'authService', '$uibModal', 'notificationService',
+  function ($scope, $rootScope, authService, $uibModal, notificationService) {
 
     $scope.iconTitle = "Bejelentkezés";
 
@@ -395,10 +383,10 @@ tmwcapp.controller('AuthCtrl', ['$scope', '$rootScope', 'authService', '$uibModa
             function(data){
                 $scope.username = data.params.username;
                 $scope.iconTitle = "Kijelentkezés";
-                if(!silent) notify(data.type, data.msg);
+                if(!silent) notificationService.notify(data.type, data.msg);
             },
             function(error){
-                if(!silent) notify(error.type, error.msg);
+                if(!silent) notificationService.notify(error.type, error.msg);
                 $scope.iconTitle = "Bejelentkezés";
                 $scope.username = null;
             }
@@ -410,12 +398,12 @@ tmwcapp.controller('AuthCtrl', ['$scope', '$rootScope', 'authService', '$uibModa
             function(response){
                 $scope.username = response.params.username;
                 $scope.iconTitle = "Kijelentkezés";
-                notify(response.type, response.msg);
+                notificationService.notify(response.type, response.msg);
             },
             function(error){
                 $scope.iconTitle = "Bejelentkezés";
                 $scope.username = null;
-                notify(error.type, error.msg);
+                notificationService.notify(error.type, error.msg);
             }
         );
     }
@@ -425,11 +413,11 @@ tmwcapp.controller('AuthCtrl', ['$scope', '$rootScope', 'authService', '$uibModa
             function(response){
                 $scope.username = null;
                 $scope.iconTitle = "Bejelentkezés";
-                notify(response.type, response.msg);
+                notificationService.notify(response.type, response.msg);
             },
             function(error){
                 $scope.iconTitle = "Kijelentkezés";
-                notify(error.type, error.msg);
+                notificationService.notify(error.type, error.msg);
             }
         );
     }
@@ -458,23 +446,19 @@ tmwcapp.controller('AuthCtrl', ['$scope', '$rootScope', 'authService', '$uibModa
             );
         }        
     }
-
-    function notify(type, msg){
-        $rootScope.$broadcast('notificationEvent', { type: type, msg: msg });
-    }
   
 }]);
 
-tmwcapp.controller('ResultmodCtrl', ['$scope', '$rootScope', 'resultmodService', 'AppConfig', '$uibModal',
-  function ($scope, $rootScope, resultmodService, AppConfig, $uibModal) {
+tmwcapp.controller('ResultmodCtrl', ['$scope', '$rootScope', 'resultmodService', 'AppConfig', '$uibModal', 'notificationService',
+  function ($scope, $rootScope, resultmodService, AppConfig, $uibModal, notificationService) {
 
     $scope.getResultmods = function(){
         resultmodService.getResultmods().then(
             function(resultmods){
                 $scope.resultmods = resultmods;
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -484,8 +468,8 @@ tmwcapp.controller('ResultmodCtrl', ['$scope', '$rootScope', 'resultmodService',
             function(response){
                 $scope.getResultmods();
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -495,8 +479,8 @@ tmwcapp.controller('ResultmodCtrl', ['$scope', '$rootScope', 'resultmodService',
             function(response){
                 $scope.getResultmods();
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -506,8 +490,8 @@ tmwcapp.controller('ResultmodCtrl', ['$scope', '$rootScope', 'resultmodService',
             function(response){
                 $scope.getResultmods();
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -552,10 +536,6 @@ tmwcapp.controller('ResultmodCtrl', ['$scope', '$rootScope', 'resultmodService',
             function(){ createResultmod(); }, 
             function(){ $scope.selected = {}; }
         );
-    }
-
-    function notify(type, msg){
-        $rootScope.$broadcast('notificationEvent', { type: type, msg: msg });
     }
   
 }]);

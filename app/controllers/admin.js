@@ -1,7 +1,7 @@
 'use strict';
 
-tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceService', 'entryService', 'AppConfig', '$uibModal',
-  function($scope, $rootScope, adminService, raceService, entryService, AppConfig, $uibModal) {
+tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceService', 'entryService', 'AppConfig', '$uibModal', 'notificationService',
+  function($scope, $rootScope, adminService, raceService, entryService, AppConfig, $uibModal, notificationService) {
     
     $scope.accordionOptions = {
         oneAtATime : true,
@@ -34,8 +34,8 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
             function(races){
                 $scope.races = races;
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     };
@@ -46,8 +46,8 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
             function(options){
                 $scope.options = options;
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     };
@@ -56,10 +56,10 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
     function modifyEntries(){
         adminService.modifyEntries($scope.data.selectedEntryOption).then(
             function(response){
-                notify(response.type, response.msg);
+                notificationService.notify(response.type, response.msg);
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     };
@@ -67,10 +67,10 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
     function deleteRaceData(raceid){
         adminService.deleteRaceData(raceid).then(
             function(response){
-                notify(response.type, response.msg);
+                notificationService.notify(response.type, response.msg);
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -78,10 +78,10 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
     function deleteLicenceData(){
         adminService.deleteLicenceData().then(
             function(response){
-                notify(response.type, response.msg);
+                notificationService.notify(response.type, response.msg);
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -139,10 +139,10 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
     $scope.processCSVLicences = function(filename){
         adminService.processCSVLicences(filename).then(
             function(response){
-                notify(response.type, response.msg);
+                notificationService.notify(response.type, response.msg);
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -154,22 +154,18 @@ tmwcapp.controller('AdminCtrl', ['$scope', '$rootScope', 'adminService', 'raceSe
     $scope.modifyResult = function(){
         adminService.modifyResult($scope.data.selectedRace.id, $scope.data.result).then(
             function(response){
-                notify(response.type, response.msg);
+                notificationService.notify(response.type, response.msg);
                 $scope.data.result = {};
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
 
-    function notify(type, msg){
-        $rootScope.$broadcast('notificationEvent', { type: type, msg: msg });
-    }
-
 }]);
 
-tmwcapp.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, entryService) {
+tmwcapp.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, entryService, notificationService) {
 
     $scope.races = $scope.$parent.races;  
 
@@ -181,8 +177,8 @@ tmwcapp.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, ent
                 function(entries){
                     $scope.entries = entries;
                 },
-                function(error){
-                    notify(error.type, error.msg);
+                function(msg){
+                    notificationService.notify(msg.type, msg.msg);
                 }
             );
         }

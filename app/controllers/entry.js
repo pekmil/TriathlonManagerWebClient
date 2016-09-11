@@ -1,8 +1,9 @@
 'use strict';
 
 tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filter', '$location', 
-                                 'entryService', 'raceService', 'parameterService', 'invoiceService', 'licenceService', 'fileService', 'AppConfig', '$uibModal',
-  function($scope, $rootScope, $routeParams, $filter, $location, entryService, raceService, parameterService, invoiceService, licenceService, fileService, AppConfig, $uibModal) {
+                                 'entryService', 'raceService', 'parameterService', 'invoiceService', 'licenceService', 'fileService', 'notificationService', 'AppConfig', '$uibModal',
+  function($scope, $rootScope, $routeParams, $filter, $location, 
+            entryService, raceService, parameterService, invoiceService, licenceService, fileService, notificationService, AppConfig, $uibModal) {
 
     $scope.popoverOptions = {
         templateUrl: 'views/partial/entryOptionsPopover.html',
@@ -126,8 +127,8 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(entries){
                 $scope.entries = entries;
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -143,11 +144,11 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
                     fileService.downloadFile(response.params.filename);
                 }
                 else{
-                    notify(response.type, response.msg);
+                    notificationService.notify(response.type, response.msg);
                 }
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -157,8 +158,8 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(familyentries){
                 $scope.familyentries = familyentries;
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -176,8 +177,8 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(results){
                 $scope.results.raceresults = results;
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -186,13 +187,13 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(response){
                 fileService.downloadFile(response.params.filename);
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
     $scope.isMedalist = function(index, result){
-        return index < 3;
+        return index < 3 && result.status === 'FINISHED';
     }
     $scope.selectResultType = function(type){
         if(type === "absolute"){$scope.results.team = false;$scope.results.family = false;}
@@ -206,11 +207,11 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
     $scope.processCSVEntries = function(filename){
         entryService.processCSVEntries(rid, filename).then(
             function(response){
-                notify('success', 'Beolvasott rekordok: ' + response);
+                notificationService.notify(response.type, response.msg);
                 getRaceEntries(rid);
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -220,8 +221,8 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(response){
                 getRaceEntries(rid);
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -231,8 +232,8 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(response){
                 getRaceEntries(rid);
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -242,8 +243,8 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(response){
                 getRaceEntries(rid);
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -253,8 +254,8 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(response){
                 getRaceEntries(rid);
             },
-            function(error){
-                notify('error', error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -265,9 +266,9 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
                 function(licences){
                     $scope.licences = licences;
                 },
-                function(error){
-                    notify(error.type, error.msg);
-                }
+                function(msg){
+                notificationService.notify(msg.type, msg.msg);
+            }
             );
         }
     }
@@ -376,10 +377,6 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
         $scope.selected.paid = true;
         $scope.selected.remainingpayment = 0;
         updateEntry();
-    }
-
-    function notify(type, msg){
-        $rootScope.$broadcast('notificationEvent', { type: type, msg: msg });
     }
 
   }]);

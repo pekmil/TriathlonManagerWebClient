@@ -1,7 +1,7 @@
 'use strict';
 
-tmwcapp.controller('TournamentCtrl', ['$scope', '$rootScope', 'tournamentService', '$uibModal',
-  function($scope, $rootScope, tournamentService, $uibModal) {
+tmwcapp.controller('TournamentCtrl', ['$scope', '$rootScope', 'tournamentService', '$uibModal', 'notificationService',
+  function($scope, $rootScope, tournamentService, $uibModal, notificationService) {
 
     getTournaments();
 
@@ -10,8 +10,8 @@ tmwcapp.controller('TournamentCtrl', ['$scope', '$rootScope', 'tournamentService
             function(tournaments){
                 $scope.tournaments = tournaments;
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -21,8 +21,8 @@ tmwcapp.controller('TournamentCtrl', ['$scope', '$rootScope', 'tournamentService
             function(response){
                 getTournaments();
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -32,8 +32,8 @@ tmwcapp.controller('TournamentCtrl', ['$scope', '$rootScope', 'tournamentService
             function(response){
                 getTournaments();
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -43,8 +43,8 @@ tmwcapp.controller('TournamentCtrl', ['$scope', '$rootScope', 'tournamentService
             function(response){
                 getTournaments();
             },
-            function(error){
-                alert(error);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -89,10 +89,6 @@ tmwcapp.controller('TournamentCtrl', ['$scope', '$rootScope', 'tournamentService
             function(){ deleteTournament(); }, 
             function(){ $scope.selected = {}; }
         );
-    }
-
-    function alert(error){
-        $rootScope.$broadcast('notificationEvent', { type: 'danger', msg: error });
     }
 
   }]);

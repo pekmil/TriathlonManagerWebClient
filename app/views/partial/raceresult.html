@@ -73,7 +73,8 @@
 							<td class="col-md-3">{{r.club}}</td>
 							<td class="col-md-1">{{r.licencenum}}</td>
 							<td class="col-md-1">{{r.racetime}}</td>
-							<td class="col-md-3"><span ng-repeat="rm in r.resultmodNames">{{rm}}<br /></span></td>
+							<td ng-show="r.racetime !== '-'" class="col-md-3"><span ng-repeat="rm in r.resultmodNames">{{rm}}<br /></span></td>
+							<td ng-show="r.racetime == '-'" class="col-md-3">{{r.statusString}}</td>
 						</tr>
 					</tbody>
 	    		</table>
@@ -88,7 +89,8 @@
 							<td class="col-md-3">{{r.club}}</td>
 							<td class="col-md-1">{{r.licencenum}}</td>
 							<td class="col-md-1">{{r.racetime}}</td>
-							<td class="col-md-3"><span ng-repeat="rm in r.resultmodNames">{{rm}}<br /></span></td>
+							<td ng-show="r.racetime !== '-'" class="col-md-3"><span ng-repeat="rm in r.resultmodNames">{{rm}}<br /></span></td>
+							<td ng-show="r.racetime == '-'" class="col-md-3">{{r.statusString}}</td>
 						</tr>
 					</tbody>
 	    		</table>
@@ -177,9 +179,9 @@
 					<thead>
 						<tr><td colspan=6 class="bg-info text-center header-level3"><b>{{key | uppercase}} - FÉRFI</b></td></tr>
 					</thead>
-					<tbody ng-repeat="t in value.maleResults">
-						<tr><td colspan=6 class="text-center header-level4">{{t.clubName}} - {{t.teamTime}}</td></tr>
-						<tr ng-repeat="r in t.teamResults | filter : filterNationalResults">
+					<tbody ng-repeat="t in value.maleResults track by $index">
+						<tr><td colspan=6 class="text-center header-level4" ng-class="{ 'medalist' : isMedalist($index, {status : 'FINISHED'})}">{{t.clubName}} - {{t.teamTime}}</td></tr>
+						<tr ng-repeat="r in t.teamResults">
 							<td class="col-md-3">{{r.name}}</td>
 							<td class="col-md-1">{{r.racenum}}</td>
 							<td class="col-md-3">{{r.club}}</td>
@@ -193,9 +195,9 @@
 					<thead>
 						<tr><td colspan=6 class="bg-info text-center header-level3"><b>{{key | uppercase}} - NŐ</b></td></tr>
 					</thead>
-					<tbody ng-repeat="t in value.femaleResults">
-						<tr><td colspan=6 class="text-center header-level4"><b>{{t.clubName}} - {{t.teamTime}}</b></td></tr>
-						<tr ng-repeat="r in t.teamResults | filter : filterNationalResults">
+					<tbody ng-repeat="t in value.femaleResults track by $index">
+						<tr><td colspan=6 class="text-center header-level4" ng-class="{ 'medalist' : isMedalist($index, {status : 'FINISHED'})}">{{t.clubName}} - {{t.teamTime}}</td></tr>
+						<tr ng-repeat="r in t.teamResults">
 							<td class="col-md-3">{{r.name}}</td>
 							<td class="col-md-1">{{r.racenum}}</td>
 							<td class="col-md-3">{{r.club}}</td>

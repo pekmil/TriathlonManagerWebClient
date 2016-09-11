@@ -1,7 +1,7 @@
 'use strict';
 
-tmwcapp.service('raceService', ['$http', '$q', 'AppConfig',
-  function($http, $q, AppConfig){
+tmwcapp.service('raceService', ['$http', '$q', 'AppConfig', 'responseHandler',
+  function($http, $q, AppConfig, responseHandler){
   
     var serviceURL = AppConfig.serviceBaseURL + "race";
 
@@ -17,87 +17,70 @@ tmwcapp.service('raceService', ['$http', '$q', 'AppConfig',
 	});
 	
     function getRace(raceId) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/' + raceId
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
 	function getRaces() {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function getTournamentRaces(tournamentId) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/tid/' + tournamentId
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function updateRace(race) {
-        var request = $http({
+        var request = {
             method: "PUT",
             url: serviceURL + '/' + race.id,
             data: race
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function createRace(race) {
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL,
             data: race
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
     
     function deleteRace(race) {
-        var request = $http({
+        var request = {
             method: "DELETE",
             url: serviceURL + '/' + race.id
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function createRaceadjustment(raceadjustment) {
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL + "/adjustment",
             data: raceadjustment
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
     
     function deleteRaceadjustment(key) {
-        var request = $http({
+        var request = {
             method: "DELETE",
             url: serviceURL + '/' + key.raceId + "/" + key.categoryId + "/" + key.resultmodId
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-
-     function handleError( response ) {
-        // The API response from the server should be returned in a
-        // nomralized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (!angular.isObject( response.data ) || !response.data.msg){
-            return($q.reject("Hiba: " + response.status + " - " + response.statusText));
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.msg ) );
-    }
-    // I transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
+        };
+        return responseHandler.handle(request);
     }
 	
   }]);

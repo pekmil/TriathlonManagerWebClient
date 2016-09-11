@@ -1,7 +1,7 @@
 'use strict';
 
-tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
-  function($http, $q, AppConfig){
+tmwcapp.service('entryService', ['$http', '$q', 'AppConfig', 'responseHandler',
+  function($http, $q, AppConfig, responseHandler){
   
     var serviceURL = AppConfig.serviceBaseURL + "entry";
     var contestantServiceURL = AppConfig.serviceBaseURL + "contestant";
@@ -25,27 +25,27 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
 	});
 
     function getRaceEntries(raceId) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/rid/' + raceId
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function getFinishedResults(raceId) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/finishedresults/' + raceId
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function getStartlist(raceId, categoryId) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/startlist/' + raceId + '/' + categoryId
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function getRaceResults(raceId, params, endpoint) {
@@ -56,12 +56,12 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
             team : params.team,
             family : params.family
         }
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL + '/' + endpoint + '/' + raceId + '/' + categoryId,
             data: resultParams
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function getRaceResultsObject(raceId, params) {
@@ -73,32 +73,32 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
     }
 
     function getEntry(raceId, racenum) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: serviceURL + '/raceid/' + raceId + '/racenum/' + racenum
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function updateEntry(entry) {
-        var request = $http({
+        var request = {
             method: "PUT",
             url: serviceURL,
             data: entry
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function updateContestant(contestant) {
         if(contestant.club !== undefined && contestant.club !== null && contestant.club.name === ''){
             delete contestant.club;
         }
-        var request = $http({
+        var request = {
             method: "PUT",
             url: contestantServiceURL + '/' + contestant.id,
             data: contestant
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function createEntry(raceId, entry) {
@@ -118,73 +118,56 @@ tmwcapp.service('entryService', ['$http', '$q', 'AppConfig',
         if(entry.contestant.club && entry.contestant.club.name){
             entryData.clubName = entry.contestant.club.name;
         }
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL + '/' + raceId,
             data: entryData
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
     
     function deleteEntry(entry) {
-        var request = $http({
+        var request = {
             method: "DELETE",
             url: serviceURL + '/raceid/' + entry.key.raceId + '/racenum/' + entry.key.racenum
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
      function postResult(raceId, resultData) {
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL + '/result/' + raceId,
             data: resultData
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
      function applyResultmod(raceId, resultData) {
-        var request = $http({
+        var request = {
             method: "POST",
             url: serviceURL + '/resultmod/' + raceId,
             data: resultData
-        });
-        return( request.then( handleSuccess, handleError ) );
+        };
+        return responseHandler.handle(request);
     }
 
     function getRaceFamilyEntries(raceId) {
-        var request = $http({
+        var request = {
             method: "GET",
             url: familyentryServiceURL + '/rid/' + raceId
-        });
-        return(request.then(handleSuccess, handleError));
+        };
+        return responseHandler.handle(request);
     }
 
     function processCSVEntries(raceId, uploadedFileName){
-        var request = $http({
+        var request = {
             method : 'POST',
             url : serviceURL + '/processcsv/' + raceId,
             data : $.param({filename : uploadedFileName}),
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-
-     function handleError( response ) {
-        // The API response from the server should be returned in a
-        // nomralized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (!angular.isObject( response.data ) || !response.data.msg){
-            return($q.reject({type : "error", msg : "Hiba: " + response.status + " - " + response.statusText}));
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data ) );
-    }
-    // I transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
+        };
+        return responseHandler.handle(request);
     }
 	
   }]);

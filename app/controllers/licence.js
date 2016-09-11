@@ -1,7 +1,7 @@
 'use strict';
 
-tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$uibModal',
-  function ($scope, $rootScope, licenceService, $uibModal) {
+tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$uibModal', 'notificationService',
+  function ($scope, $rootScope, licenceService, $uibModal, notificationService) {
 
     $scope.namePart = "";
     $scope.licencePart = "";
@@ -26,12 +26,11 @@ tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$u
                 $scope.licences = licences.data;
                 $scope.pagination.totalItems = licences.count;
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
-    //$scope.getLicences(0, $scope.pagination.itemsPerPage - 1);
 
     $scope.findByName = function(namePart){
         $scope.licencePart = "";
@@ -40,8 +39,8 @@ tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$u
             function(licences){
                 $scope.licences = licences;
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -52,8 +51,8 @@ tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$u
             function(licences){
                 $scope.licences = licences;
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -63,8 +62,8 @@ tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$u
             function(response){
                 $scope.loadPageData();
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -74,8 +73,8 @@ tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$u
             function(response){
                 $scope.loadPageData();
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -85,8 +84,8 @@ tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$u
             function(response){
                 $scope.loadPageData();
             },
-            function(error){
-                notify(error.type, error.msg);
+            function(msg){
+                notificationService.notify(msg.type, msg.msg);
             }
         );
     }
@@ -131,10 +130,6 @@ tmwcapp.controller('LicenceCtrl', ['$scope', '$rootScope', 'licenceService', '$u
             function(){ deleteLicence(); }, 
             function(){ $scope.selected = {}; }
         );
-    }
-
-    function notify(type, msg){
-        $rootScope.$broadcast('notificationEvent', { type: type, msg: msg });
     }
   
 }]);
