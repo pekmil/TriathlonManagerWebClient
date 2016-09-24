@@ -66,4 +66,4 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 run(['WSNotification', function(WSNotification) {
   //init the notification service
 }]).
-value('version', '0.1');
+value('version', '1.0');

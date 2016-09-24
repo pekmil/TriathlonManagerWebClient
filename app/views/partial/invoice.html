@@ -5,7 +5,11 @@
 	</h3>
     <div class="panel panel-default" ng-repeat="i in invoices | orderBy : 'customername'" ng-show="invoices.length">
 		<div class="panel-heading">
-			<div class="col-md-6">Számlázási név: {{i.customername}}<br />Számlázási cím: {{i.customeraddress}}</div>
+			<div class="col-md-6">
+				Számlázási név: {{i.customername}}<br />
+				Számlázási cím: {{i.customeraddress}}<br />
+				Fizetési mód: {{i.paymentmethod | paymentmethod}}
+			</div>
 			<div class="col-md-6" style="display: none;" showonhover>
 				<span class="pull-right">
 					<span class="glyphicon glyphicon-pencil clickable" ng-click="edit(i)" title="Módosít"></span>

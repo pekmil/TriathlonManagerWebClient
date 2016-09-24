@@ -12,7 +12,7 @@
 			<form role="form" name="resultForm" class="form-inline" novalidate>
 				<div class="form-group" ng-class="{ 'has-error' : resultForm.racenum.$invalid && !resultForm.racenum.$pristine }">
 					<label for="racenum">Rajtszám:</label>
-					<input type="number" name="racenum" id="result-racenum" ng-model="result.racenum" min=1 max=999 ng-pattern="/^[1-9][0-9]{0,2}$/" racenum="inverse" required class="form-control" />
+					<input type="text" name="racenum" id="result-racenum" ng-model="result.racenum" ng-pattern="/^[1-9][0-9]{0,2}[A-Z]?$/" racenum="inverse" required class="form-control" />
 					<p ng-show="resultForm.racenum.$invalid && !resultForm.racenum.$pristine" class="help-block">A rajtszám megadása kötelező!</p>    
 					<p ng-show="resultForm.racenum.$pending.racenum" class="help-block">Rajtszám ellenőrzése...<img src="resources/images/ajax-loader-small.gif" /></p>
 					<p ng-show="resultForm.racenum.$error.racenum" class="help-block">Nem létező rajtszám!</p>

@@ -23,7 +23,7 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
     $scope.csvUploadOptions = {
         csvUploadURL : AppConfig.serviceBaseURL + 'entry/uploadcsv',
         expectedCSVHeader : 'name;racenum;gender;birthyear;category;fromtown;club;licencenum;agegroup;paid',
-        expectedDataLinePattern : /.{1,100};[1-9]\d{0,2};(MALE|FEMALE);[1-9]\d{3};.{1,100};.{0,100};.{0,100};.{0,50};.{1,100};(IGEN|NEM|[1-9]\d{0,10})/
+        expectedDataLinePattern : /.{1,100};[1-9]\d{0,2}[A-Z]?;(MALE|FEMALE);[1-9]\d{3};.{1,100};.{0,100};.{0,100};.{0,50};.{1,100};(IGEN|NEM|[1-9]\d{0,10})/
     };
     $scope.entryOrderOptions = {
         orderProperty : "entrytime",
@@ -209,6 +209,7 @@ tmwcapp.controller('EntryCtrl', ['$scope', '$rootScope', '$routeParams', '$filte
             function(response){
                 notificationService.notify(response.type, response.msg);
                 getRaceEntries(rid);
+                fileService.downloadFile(response.params.invalidLicences);
             },
             function(msg){
                 notificationService.notify(msg.type, msg.msg);

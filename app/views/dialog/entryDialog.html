@@ -60,7 +60,7 @@
 	        	<form role="form" name="entryForm" novalidate>
 					<div class="form-group col-md-4" ng-class="{ 'has-error' : entryForm.racenum.$invalid && !entryForm.racenum.$pristine }">
 						<label for="racenum">Rajtszám:</label>
-						<input type="number" name="racenum" ng-model="selected.key.racenum" ng-disabled="mode !== 'CREATE'" min=1 max=999 ng-pattern="/^[1-9][0-9]{0,2}$/" racenum required class="form-control" />
+						<input type="text" name="racenum" ng-model="selected.key.racenum" ng-disabled="mode !== 'CREATE'" ng-pattern="/^[1-9][0-9]{0,2}[A-Z]?$/" racenum required class="form-control" />
 						<p ng-show="entryForm.racenum.$invalid && !entryForm.racenum.$pristine" class="help-block">A rajtszám megadása kötelező!</p>
 						<p ng-show="entryForm.racenum.$pending.racenum" class="help-block">Rajtszám ellenőrzése...<img src="resources/images/ajax-loader-small.gif" /></p>
     					<p ng-show="entryForm.racenum.$error.racenum" class="help-block">A megadott rajtszám foglalt!</p>

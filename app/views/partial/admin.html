@@ -12,13 +12,15 @@
 				</div>
 				<div class="form-group">
       				<label for="value">Érték:</label>
-					 <select name="value" ng-model="data.selectedEntryOption.selectedValue" class="form-control">
+					 <select ng-hide="data.selectedEntryOption.freeValue" name="value" ng-model="data.selectedEntryOption.selectedValue" class="form-control">
     					<option ng-repeat="o in data.selectedEntryOption.values track by $index" value="{{$index}}">{{o.displayName}}</option>
     				</select>
+    				<input ng-show="data.selectedEntryOption.freeValue" type="text" name="value" ng-model="data.selectedEntryOption.value" class="form-control" />
 				</div>
 				<button type="button" class="btn btn-primary" ng-disabled="!data.selectedEntryOption" ng-click="selectEntries()" title="Nevezések kiválasztása"><span class="glyphicon glyphicon-list"></span></button>
-				<button type="button" class="btn btn-primary" ng-disabled="!data.selectedEntryOption || !data.selectedEntryOption.selectedValue" ng-click="modifyEntries()"><span class="glyphicon glyphicon-pencil"></span> Végrehajt</button>
+				<button type="button" class="btn btn-primary" ng-disabled="!data.selectedEntryOption || (!data.selectedEntryOption.selectedValue && !data.selectedEntryOption.value) || !data.selectedEntryOption.selectedRacenums.length" ng-click="modifyEntries()"><span class="glyphicon glyphicon-pencil"></span> Végrehajt</button>
 				<p>{{data.selectedEntryOption}}</p>
+				<p>{{data.selectedEntryOption.selectedRacenums.length}}</p>
 			</form>
 	    </uib-accordion-group>
 	    <uib-accordion-group is-open="accordionOptions.deleteRaceData.open">

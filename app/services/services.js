@@ -203,8 +203,7 @@ tmwcapp.service('WSNotification', ['$websocket', '$rootScope', '$interval', 'App
     });
 
     ws.onClose(function() {
-       notify('info', 'Az értesítési végpont kapcsolat lezárult!'); 
-       $interval.cancel();
+       notify('info', 'Az értesítési végpont kapcsolat lezárult!');
     });
 
     ws.onError(function() {
@@ -213,7 +212,12 @@ tmwcapp.service('WSNotification', ['$websocket', '$rootScope', '$interval', 'App
     });
 
     function ping(){
-        ws.send('ping');
+        if(ws.readyState == 1){
+            ws.send('ping');    
+        }
+        else if(ws.readyState == 3){
+            $interval.cancel();
+        }        
     }
 
     function notify(type, msg){
@@ -221,7 +225,8 @@ tmwcapp.service('WSNotification', ['$websocket', '$rootScope', '$interval', 'App
     }
 
     $rootScope.$on('$destroy', function(){
-      $interval.cancel();
+        ws.close(true);
+        $interval.cancel();
     });
 
 }]);

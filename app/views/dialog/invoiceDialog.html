@@ -27,6 +27,15 @@
 					<input type="text" name="customeraddress" ng-model="selected.invoice.customeraddress" maxlength=250 required ng-disabled="invoiceMode === 'DELETE'" class="form-control" />
 					<p ng-show="invoiceForm.customeraddress.$invalid && !invoiceForm.customeraddress.$pristine" class="help-block">A számlázási cím megadása kötelező!</p>
 				</div>
+				<div class="form-group" ng-class="{ 'has-error' : invoiceForm.paymentmethod.$invalid && !invoiceForm.paymentmethod.$pristine }">
+					<label for="paymentmethod">Fizetési mód:</label>
+					<select name="paymentmethod" ng-model="selected.invoice.paymentmethod" ng-disabled="invoiceMode === 'DELETE'" required class="form-control">
+					  <option value="">--Válassz fizetési módot--</option>
+				      <option value="CASH">készpénz</option>
+				      <option value="TRANSFER">átutalás</option>
+				    </select>
+				    <p ng-show="invoiceForm.paymentmethod.$invalid && !invoiceForm.paymentmethod.$pristine" class="help-block">A fizetési mód megadása kötelező!</p>
+				</div>
 			</div>			
 		</form>
 	</div>

@@ -44,3 +44,18 @@ tmwcapp.filter('gender', function() {
 	}
   };
 });
+
+tmwcapp.filter('paymentmethod', function() {
+  return function(input) {
+    switch (input) {
+	    case 'CASH':
+	        return "készpénz";
+	        break;
+	    case 'TRANSFER':
+	        return "átutalás";
+	        break;
+	    default:
+	        return "N/A";
+	}
+  };
+});
